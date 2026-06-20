@@ -82,3 +82,24 @@ border-top:1px solid #ddd;
 #sitesTable{
 margin-top:30px;
 }
+/* ===== تحسين خطوط الخطة والمسار ===== */
+
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap');
+
+body{
+    font-family: 'Cairo', sans-serif;
+}
+
+#planNumber{
+    font-size:32px;
+    font-weight:800;
+    text-align:center;
+    color:#0b3d91;
+}
+
+#routeName{
+    font-size:26px;
+    font-weight:700;
+    text-align:center;
+    color:#1d3557;
+}
