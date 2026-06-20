@@ -3,8 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>نظام كاميرات المراقبة</title>
-
+<title>سجلات المواقع</title>
 <link rel="stylesheet" href="style.css">
 </head>
 
@@ -12,20 +11,54 @@
 
 <div class="container">
 
-<h1>كاميرات المراقبة الميدانية</h1>
+<h1>سجلات المواقع</h1>
+
+<div class="search-box">
 
 <label>رقم الخطة</label>
+
+<div class="search-row">
 <input type="number" id="planNumber" placeholder="أدخل رقم الخطة">
+<button onclick="searchPlan()">بحث</button>
+</div>
 
-<label>اسم الموقع</label>
-<input type="text" id="siteName" placeholder="مثال: مستشفى الملك">
+</div>
 
-<label>اسم الكاميرا</label>
-<input type="text" id="cameraName" placeholder="مثال: CAM-01">
+<div class="route-box">
 
-<button onclick="startPlan()">حفظ البيانات</button>
+<label>اسم المسار</label>
 
-<div id="result"></div>
+<input
+type="text"
+id="routeName"
+readonly
+placeholder="سيظهر تلقائياً بعد البحث">
+
+</div>
+
+<hr>
+
+<h2>بيانات الموظف</h2>
+
+<label>الاسم</label>
+<input type="text" id="employeeName">
+
+<label>الرقم الوظيفي</label>
+<input type="text" id="employeeId">
+
+<label>رقم السيارة</label>
+<input type="text" id="carNumber">
+
+<label>رقم اللابتوب</label>
+<input type="text" id="laptop">
+
+<label>عدد الفلاشات</label>
+<input type="number" id="flashCount">
+
+<label>عدد الهاردسكات</label>
+<input type="number" id="hardCount">
+
+<div id="sitesTable"></div>
 
 </div>
 
