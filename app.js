@@ -6,5 +6,7 @@ function startPlan() {
     return;
   }
 
-  alert("تم إدخال رقم الخطة: " + plan);
+  localStorage.setItem("planNumber", plan);
+
+  alert("تم حفظ رقم الخطة: " + plan);
 }
