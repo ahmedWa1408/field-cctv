@@ -7,8 +7,36 @@ const plans = {
     ]
   },
 
+  2: {
+    route: "حائل",
+    sites: [
+
+    ]
+  },
+
+  3: {
+    route: "أم سدرة",
+    sites: [
+
+    ]
+  },
+
   4: {
-    route: "مسار 4",
+    route: "البدايع",
+    sites: [
+
+    ]
+  },
+
+  5: {
+    route: "قبة",
+    sites: [
+
+    ]
+  },
+
+  6: {
+    route: "شري الجديد",
     sites: [
 
     ]
