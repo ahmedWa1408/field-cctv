@@ -1,12 +1,9 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
-
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>سجلات المواقع</title>
+<title>الحركة الميدانية لقسم التشغيل CCTV</title>
 
 <link rel="stylesheet" href="style.css">
 
@@ -16,20 +13,63 @@
 
 <div class="container">
 
-<h1>سجلات المواقع</h1>
+<header class="top-header">
 
-<div class="search-box">
+<div class="logo-area">
+
+<img src="images/logo.png" class="logo">
+
+<div>
+
+<h1>الحركة الميدانية</h1>
+
+<p>لقسم التشغيل CCTV</p>
+
+</div>
+
+</div>
+
+<div class="header-buttons">
+
+<button class="history-btn">📁 السجل</button>
+
+</div>
+
+</header>
+
+<section class="plan-card">
+
+<h2>بيانات الخطة</h2>
+
+<div class="row">
+
+<div class="input-group">
 
 <label>رقم الخطة</label>
-
-<div class="search-row">
 
 <input
 type="number"
 id="planNumber"
 placeholder="أدخل رقم الخطة">
 
-<button onclick="searchPlan()">
+</div>
+
+<div class="input-group">
+
+<label>اسم المسار</label>
+
+<input
+type="text"
+id="routeName"
+readonly>
+
+</div>
+
+<div class="input-group">
+
+<button
+class="search-btn"
+onclick="searchPlan()">
 
 بحث
 
@@ -39,52 +79,168 @@ placeholder="أدخل رقم الخطة">
 
 </div>
 
-<div class="route-box">
+</section>
 
-<label>اسم المسار</label>
-
-<input
-type="text"
-id="routeName"
-readonly
-placeholder="سيظهر تلقائياً بعد البحث">
-
-</div>
-
-<hr>
+<section class="employee-card">
 
 <h2>بيانات الموظف</h2>
 
-<label>الاسم</label>
+<div class="grid">
+
+<div>
+
+<label>اسم الموظف</label>
+
 <input type="text" id="employeeName">
 
+</div>
+
+<div>
+
 <label>الرقم الوظيفي</label>
+
 <input type="text" id="employeeId">
 
+</div>
+
+<div>
+
 <label>رقم السيارة</label>
+
 <input type="text" id="carNumber">
 
+</div>
+
+<div>
+
 <label>رقم اللابتوب</label>
-<input type="text" id="laptop">
+
+<input type="text" id="laptopNumber">
+
+</div>
+
+<div>
 
 <label>عدد الفلاشات</label>
+
 <input type="number" id="flashCount">
 
+</div>
+
+<div>
+
 <label>عدد الهاردسكات</label>
+
 <input type="number" id="hardCount">
 
-<hr>
+</div>
+
+</div>
+
+</section>
+
+<section class="sites-card">
 
 <h2>جدول المواقع</h2>
 
 <div id="sitesTable"></div>
 
+</section><section class="notes-card">
+
+<h2>الملاحظات العامة</h2>
+
+<textarea id="generalNotes" rows="5" placeholder="اكتب الملاحظات العامة هنا..."></textarea>
+
+<label class="upload-title">الصور العامة</label>
+
+<input type="file" id="generalImages" multiple accept="image/*">
+
+</section>
+
+<section class="supervisor-card">
+
+<h2>اعتماد مشرف الفترة</h2>
+
+<div class="grid">
+
+<div>
+
+<label>مشرف الفترة</label>
+
+<input type="text" id="supervisorName">
+
+</div>
+
+<div>
+
+<label>رقم ID</label>
+
+<input type="text" id="supervisorId">
+
+</div>
+
+<div class="approve-box">
+
+<button class="approve-btn">
+
+✔ اعتماد
+
+</button>
+
+</div>
+
+</div>
+
+</section>
+
+<section class="action-buttons">
+
+<button class="save-btn">
+
+💾 حفظ
+
+</button>
+
+<button class="pdf-btn">
+
+📄 PDF
+
+</button>
+
+<button class="print-btn">
+
+🖨️ طباعة
+
+</button>
+
+<button class="history-btn">
+
+📁 السجل
+
+</button>
+
+</section>
+
+<footer>
+
+<p>
+
+إدارة أنظمة المراقبة الأمنية – قسم التشغيل CCTV
+
+</p>
+
+<p>
+
+© جميع الحقوق محفوظة
+
+</p>
+
+</footer>
+
 </div>
 
 <script src="plans.js"></script>
-
 <script src="app.js"></script>
 
 </body>
-
 </html>
