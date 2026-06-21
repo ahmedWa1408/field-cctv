@@ -352,4 +352,471 @@ updateProgress();
 
 });
 
+}//======================================
+// التاريخ والوقت الحالي
+//======================================
+
+function getNow(){
+
+    const now = new Date();
+
+    const year = now.getFullYear();
+
+    const month = String(now.getMonth()+1)
+    .padStart(2,"0");
+
+    const day = String(now.getDate())
+    .padStart(2,"0");
+
+    const hour = String(now.getHours())
+    .padStart(2,"0");
+
+    const minute = String(now.getMinutes())
+    .padStart(2,"0");
+
+    return `${year}-${month}-${day}T${hour}:${minute}`;
+
 }
+
+
+
+//======================================
+// حساب مدة الرصد
+//======================================
+
+function calculateHours(start,end,result){
+
+    if(start.value==="" || end.value===""){
+
+        result.value="";
+
+        return;
+
+    }
+
+    const startDate = new Date(start.value);
+
+    const endDate = new Date(end.value);
+
+    const diff =
+    endDate-startDate;
+
+    if(diff<=0){
+
+        result.value="";
+
+        return;
+
+    }
+
+    const totalMinutes =
+    Math.floor(diff/60000);
+
+    const hours =
+    Math.floor(totalMinutes/60);
+
+    const minutes =
+    totalMinutes%60;
+
+    result.value =
+    hours+" ساعة "+
+    minutes+" دقيقة";
+
+}//======================================
+// تحديث نسبة الإنجاز
+//======================================
+
+function updateProgress(){
+
+    const statusList =
+    document.querySelectorAll(".statusSelect");
+
+    let completed = 0;
+
+    statusList.forEach(function(item){
+
+        if(item.value!==""){
+
+            completed++;
+
+        }
+
+    });
+
+    completedSites.textContent = completed;
+
+    const total = statusList.length;
+
+    if(total===0){
+
+        progressFill.style.width="0%";
+
+        return;
+
+    }
+
+    const percent =
+    Math.round((completed/total)*100);
+
+    progressFill.style.width =
+    percent+"%";
+
+}
+
+
+
+//======================================
+// حفظ تلقائي
+//======================================
+
+function autoSave(){
+
+    const data = {};
+
+    data.plan = planNumber;
+
+    data.route = routeInput.value;
+
+    data.operator =
+    operatorInput.value;
+
+    data.employee =
+    employeeInput.value;
+
+    data.car =
+    carInput.value;
+
+    data.laptop =
+    laptopInput.value;
+
+    data.flash =
+    flashInput.value;
+
+    data.hdd =
+    hddInput.value;
+
+    data.start =
+    missionStartInput.value;
+
+    data.end =
+    missionEndInput.value;
+
+    data.workHours =
+    workHoursInput.value;
+
+    data.rows=[];
+
+    document
+    .querySelectorAll("#sitesBody tr")
+    .forEach(function(row){
+
+        data.rows.push({
+
+            status:
+            row.querySelector(".statusSelect").value,
+
+            start:
+            row.querySelector(".startRecord").value,
+
+            end:
+            row.querySelector(".endRecord").value,
+
+            hours:
+            row.querySelector(".recordHours").value,
+
+            notes:
+            row.querySelector(".notes").value
+
+        });
+
+    });
+
+    localStorage.setItem(
+
+        "mission_"+planNumber,
+
+        JSON.stringify(data)
+
+    );
+
+}//======================================
+// استعادة المهمة المحفوظة
+//======================================
+
+function restoreMission(){
+
+    const saved = localStorage.getItem(
+        "mission_" + planNumber
+    );
+
+    if(!saved){
+        return;
+    }
+
+    const data = JSON.parse(saved);
+
+    operatorInput.value = data.operator || "";
+    employeeInput.value = data.employee || "";
+    carInput.value = data.car || "";
+    laptopInput.value = data.laptop || "";
+    flashInput.value = data.flash || "";
+    hddInput.value = data.hdd || "";
+
+    missionStartInput.value = data.missionStart || "";
+    missionEndInput.value = data.missionEnd || "";
+    workHoursInput.value = data.workHours || "";
+
+    const rows = document.querySelectorAll("#sitesBody tr");
+
+    rows.forEach(function(row,index){
+
+        if(!data.rows[index]) return;
+
+        row.querySelector(".statusSelect").value =
+        data.rows[index].status;
+
+        row.querySelector(".startRecord").value =
+        data.rows[index].start;
+
+        row.querySelector(".endRecord").value =
+        data.rows[index].end;
+
+        row.querySelector(".recordHours").value =
+        data.rows[index].duration;
+
+        row.querySelector(".notes").value =
+        data.rows[index].notes;
+
+    });
+
+    updateProgress();
+
+}
+
+
+
+//======================================
+// حفظ تلقائي عند أي تعديل
+//======================================
+
+document.addEventListener("input",function(){
+
+    autoSave();
+
+});
+
+document.addEventListener("change",function(){
+
+    autoSave();
+
+});
+
+
+
+//======================================
+// إنهاء المهمة
+//======================================
+
+document
+.getElementById("finishBtn")
+.addEventListener("click",finishMission);
+
+function finishMission(){
+
+    const now = new Date();
+
+    missionEndInput.value =
+    formatDateTime(now);
+
+    calculateMissionHours();
+
+    autoSave();
+
+    alert("تم إنهاء المهمة بنجاح.");
+
+}//======================================
+// ربط أزرار الإجراءات
+//======================================
+
+document.getElementById("saveBtn").addEventListener("click",function(){
+
+    autoSave();
+
+    alert("تم حفظ المهمة بنجاح.");
+
+});
+
+
+
+document.getElementById("printBtn").addEventListener("click",function(){
+
+    window.print();
+
+});
+
+
+
+document.getElementById("copyLinkBtn").addEventListener("click",function(){
+
+    navigator.clipboard.writeText(window.location.href);
+
+    alert("تم نسخ رابط المهمة.");
+
+});
+
+
+
+document.getElementById("shareBtn").addEventListener("click",async function(){
+
+    if(navigator.share){
+
+        try{
+
+            await navigator.share({
+
+                title:"المهمة الميدانية",
+
+                text:"مشاركة المهمة",
+
+                url:window.location.href
+
+            });
+
+        }catch(e){
+
+            console.log(e);
+
+        }
+
+    }else{
+
+        alert("المشاركة غير مدعومة في هذا المتصفح.");
+
+    }
+
+});
+
+
+
+//======================================
+// زر PDF
+//======================================
+
+document.getElementById("pdfBtn").addEventListener("click",function(){
+
+    alert("سيتم تفعيل تصدير PDF بعد ربط مكتبة PDF.");
+
+});
+
+
+
+//======================================
+// زر Excel
+//======================================
+
+document.getElementById("excelBtn").addEventListener("click",function(){
+
+    alert("سيتم تفعيل تصدير Excel بعد ربط المكتبة.");
+
+});
+
+
+
+//======================================
+// تحديث ساعات المهمة كل دقيقة
+//======================================
+
+setInterval(function(){
+
+    calculateMissionHours();
+
+},60000);//======================================
+// استعادة البيانات عند تشغيل الصفحة
+//======================================
+
+window.addEventListener("load",function(){
+
+    restoreMission();
+
+});
+
+
+
+//======================================
+// تحديث نسبة الإنجاز بعد الاستعادة
+//======================================
+
+setTimeout(function(){
+
+    updateProgress();
+
+},300);
+
+
+
+//======================================
+// حفظ تلقائي كل 30 ثانية
+//======================================
+
+setInterval(function(){
+
+    autoSave();
+
+},30000);
+
+
+
+//======================================
+// حفظ قبل إغلاق الصفحة
+//======================================
+
+window.addEventListener("beforeunload",function(){
+
+    autoSave();
+
+});
+
+
+
+//======================================
+// مراقبة الاتصال بالإنترنت
+//======================================
+
+window.addEventListener("offline",function(){
+
+    console.log("تم فقد الاتصال بالإنترنت");
+
+});
+
+
+
+window.addEventListener("online",function(){
+
+    console.log("تم استعادة الاتصال");
+
+    autoSave();
+
+});
+
+
+
+//======================================
+// تفعيل ألوان الصفوف بعد الاستعادة
+//======================================
+
+document.querySelectorAll(".statusSelect")
+.forEach(function(select){
+
+    select.dispatchEvent(
+
+        new Event("change")
+
+    );
+
+});
+
+
+
+//======================================
+// نهاية mission.js
+//======================================
