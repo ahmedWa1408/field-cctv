@@ -1,116 +1,107 @@
-function searchPlan() {
+// =========================
+// تشغيل النظام
+// =========================
 
-  const plan = document.getElementById("planNumber").value.trim();
-  const table = document.getElementById("sitesTable");
+const splashScreen = document.getElementById("splashScreen");
+const welcomeScreen = document.getElementById("welcomeScreen");
+const homePage = document.getElementById("homePage");
 
-  table.innerHTML = "";
+const startBtn = document.getElementById("startBtn");
 
-  if (!plans[plan]) {
+window.addEventListener("load", () => {
 
-    document.getElementById("routeName").value = "";
+    setTimeout(() => {
 
-    alert("رقم الخطة غير موجود");
+        splashScreen.classList.add("hidden");
 
-    return;
+        welcomeScreen.classList.remove("hidden");
 
-  }
+    }, 3000);
 
-  document.getElementById("routeName").value = plans[plan].route;
+});
 
-  let html = `
+startBtn.addEventListener("click", () => {
 
-<table class="sites-table">
+    welcomeScreen.classList.add("hidden");
 
-<tr>
+    homePage.classList.remove("hidden");
 
-<th>رمز الموقع</th>
-<th>نوع الوحدة</th>
-<th>📍 الموقع</th>
-<th>XML</th>
-<th>حالة الموقع</th>
-<th>من</th>
-<th>إلى</th>
-<th>📷 صور</th>
-<th>ملاحظات</th>
+});// =========================
+// عناصر البحث
+// =========================
 
-</tr>
+const planNumber = document.getElementById("planNumber");
 
-`;
+const routeName = document.getElementById("routeName");
 
-  plans[plan].sites.forEach(site => {
+const searchBtn = document.getElementById("searchBtn");
 
-    html += `
+const missionBtn = document.getElementById("missionBtn");
 
-<tr>
+const historyBtn = document.getElementById("historyBtn");// =========================
+// البحث عن الخطة
+// =========================
 
-<td>${site.code}</td>
+searchBtn.addEventListener("click", () => {
 
-<td>${site.storage}</td>
+    const number = planNumber.value.trim();
 
-<td>
+    if(number===""){
 
-<a href="${site.map}" target="_blank">
+        alert("الرجاء إدخال رقم الخطة");
 
-📍 فتح الموقع
+        return;
 
-</a>
+    }
 
-</td>
+    if(!plans[number]){
 
-<td>
+        alert("رقم الخطة غير موجود");
 
-<label><input type="radio" name="xml_${site.code}"> نعم</label>
+        return;
 
-<label><input type="radio" name="xml_${site.code}"> لا</label>
+    }
 
-</td>
+    routeName.value = plans[number].route;
 
-<td>
+    missionBtn.style.display="block";
 
-<select>
+    historyBtn.style.display="block";
 
-<option>يعمل</option>
+});// =========================
+// بدء المهمة
+// =========================
 
-<option>لا يعمل</option>
+missionBtn.addEventListener("click", () => {
 
-<option>يعمل ولا توجد مخالفات</option>
+    localStorage.setItem("currentPlan", planNumber.value);
 
-</select>
+    localStorage.setItem("currentRoute", routeName.value);
 
-</td>
+    window.location.href = "mission.html";// =========================
+// سجل العمليات
+// =========================
 
-<td>
+historyBtn.addEventListener("click", () => {
 
-<input type="datetime-local">
+    localStorage.setItem("currentPlan", planNumber.value);
 
-</td>
+    localStorage.setItem("currentRoute", routeName.value);
 
-<td>
+    window.location.href = "history.html";// =========================
+// البحث بالضغط على Enter
+// =========================
 
-<input type="datetime-local">
+planNumber.addEventListener("keypress", function(e){
 
-</td>
+    if(e.key==="Enter"){
 
-<td>
+        searchBtn.click();
 
-<input type="file" accept="image/*" multiple>
+    }
 
-</td>
+});
 
-<td>
+});
 
-<input type="text">
-
-</td>
-
-</tr>
-
-`;
-
-  });
-
-  html += "</table>";
-
-  table.innerHTML = html;
-
-}
+});
