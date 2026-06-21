@@ -6,7 +6,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>الحركة الميدانية - قسم التشغيل CCTV</title>
+<title>الحركة الميدانية | قسم التشغيل CCTV</title>
 
 <link rel="stylesheet" href="style.css">
 
@@ -18,34 +18,32 @@
 
 <div id="splashScreen" class="splash">
 
-    <img src="images/logo.png" class="logo">
-
-    <h1>إدارة أنظمة المراقبة الأمنية</h1>
-
-    <h2>قسم التشغيل CCTV</h2>
+    <img src="images/logo.png" class="logo" alt="Tahakom">
 
 </div>
 
-<!-- رسالة الترحيب -->
+<!-- شاشة الترحيب -->
 
 <div id="welcomeScreen" class="welcome hidden">
 
     <div class="card">
 
-        <h1>مرحباً بكم</h1>
+        <h1>الحركة الميدانية</h1>
+
+        <h2>قسم التشغيل CCTV</h2>
+
+        <div class="line"></div>
 
         <p>
 
-نسأل الله لكم التوفيق والسلامة
-
-في أداء مهامكم الميدانية.
+            نسأل الله لكم التوفيق والسلامة
+            <br>
+            في أداء مهامكم الميدانية.
 
         </p>
 
         <button id="startBtn">
-
-بدء العمل
-
+            دخول النظام
         </button>
 
     </div>
@@ -60,21 +58,11 @@
 
 <div class="title">
 
-<img src="images/logo.png" class="small-logo">
-
 <div>
 
-<h1>
+<h1>الحركة الميدانية</h1>
 
-الحركة الميدانية
-
-</h1>
-
-<p>
-
-قسم التشغيل CCTV
-
-</p>
+<p>قسم التشغيل CCTV</p>
 
 </div>
 
@@ -84,29 +72,16 @@
 
 <section class="search-card">
 
-<h2>
+<h2>بيانات الخطة</h2>
 
-بيانات الخطة
-
-</h2>
-
-<label>
-
-رقم الخطة
-
-</label>
+<label>رقم الخطة</label>
 
 <div class="search-row">
 
 <input
-
 type="number"
-
 id="planNumber"
-
-placeholder="أدخل رقم الخطة"
-
->
+placeholder="أدخل رقم الخطة">
 
 <button id="searchBtn">
 
@@ -116,43 +91,23 @@ placeholder="أدخل رقم الخطة"
 
 </div>
 
-<label>
-
-اسم المسار
-
-</label>
+<label>اسم المسار</label>
 
 <input
-
 type="text"
-
 id="routeName"
-
 readonly
-
->
+placeholder="سيظهر اسم المسار هنا">
 
 <div class="buttons">
 
-<button
+<button id="historyBtn" style="display:none;">
 
-id="historyBtn"
-
-style="display:none;"
-
->
-
-📁 سجل العمليات السابقة للخطة
+📁 سجل العمليات السابقة
 
 </button>
 
-<button
-
-id="missionBtn"
-
-style="display:none;"
-
->
+<button id="missionBtn" style="display:none;">
 
 ▶ بدء المهمة
 
@@ -165,7 +120,7 @@ style="display:none;"
 <footer>
 
 إدارة أنظمة المراقبة الأمنية
-
+<br>
 قسم التشغيل CCTV
 
 </footer>
@@ -173,7 +128,6 @@ style="display:none;"
 </div>
 
 <script src="plans.js"></script>
-
 <script src="app.js"></script>
 
 </body>
