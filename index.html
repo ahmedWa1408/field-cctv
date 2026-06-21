@@ -18,7 +18,7 @@
 
 <div id="splashScreen" class="splash">
 
-    <img src="IMG_3707.jpeg" class="logo" alt="Tahakom">
+<img src="IMG_3707.jpeg" class="logo" alt="Tahakom">
 
 </div>
 
@@ -26,25 +26,25 @@
 
 <div id="welcomeScreen" class="welcome hidden">
 
-    <div class="welcome-card">
+<div class="welcome-card">
 
-        <h1>الحركة الميدانية</h1>
+<h1>الحركة الميدانية</h1>
 
-        <h2>قسم التشغيل CCTV</h2>
+<h2>قسم التشغيل CCTV</h2>
 
-        <div class="line"></div>
+<div class="line"></div>
 
-        <p>
+<p>
 
-            نسأل الله لكم التوفيق والسلامة
+نسأل الله لكم التوفيق والسلامة
 
-            <br>
+<br>
 
-            في أداء مهامكم الميدانية.
+في أداء مهامكم الميدانية.
 
-        </p>
+</p>
 
-    </div>
+</div>
 
 </div>
 
@@ -62,11 +62,11 @@
 
 <section class="search-card">
 
+<div id="searchCard">
+
 <h2>بيانات الخطة</h2>
 
 <label>رقم الخطة</label>
-
-<div class="search-row">
 
 <input
 type="number"
@@ -79,29 +79,34 @@ placeholder="أدخل رقم الخطة">
 
 </button>
 
-</div><label>اسم المسار</label>
+</div>
+
+<div id="routeCard" class="hidden">
+
+<h2>اسم المسار</h2>
 
 <input
 type="text"
 id="routeName"
-readonly
-placeholder="سيظهر اسم المسار بعد البحث">
+readonly>
 
-<div class="buttons">
+<button id="backBtn">
 
-<button
-id="historyBtn"
-class="hidden">
+⬅ العودة لرقم الخطة
 
-📁 سجل العمليات السابقة
+</button></div>
+
+<div class="buttons hidden" id="actionButtons">
+
+<button id="missionBtn">
+
+بدء المهمة
 
 </button>
 
-<button
-id="missionBtn"
-class="hidden">
+<button id="historyBtn">
 
-▶ بدء المهمة
+سجل العمليات السابقة
 
 </button>
 
@@ -117,10 +122,14 @@ class="hidden">
 
 قسم التشغيل CCTV
 
-</footer></div>
+</footer>
+
+</div>
 
 <script src="plans.js"></script>
+
 <script src="app.js"></script>
 
 </body>
+
 </html>
