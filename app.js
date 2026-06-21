@@ -1,43 +1,74 @@
-document.addEventListener("DOMContentLoaded", function () {
+window.onload = function () {
 
-    const searchBtn = document.getElementById("searchBtn");
-    const missionBtn = document.getElementById("missionBtn");
-    const historyBtn = document.getElementById("historyBtn");
+    // إظهار الشعار لمدة ثانيتين
+    setTimeout(function () {
 
-    searchBtn.onclick = function () {
+        document.getElementById("splashScreen").classList.add("hidden");
+        document.getElementById("welcomeScreen").classList.remove("hidden");
 
-        const number = document.getElementById("planNumber").value.trim();
+        // بعد 3 ثوانٍ تظهر الصفحة الرئيسية تلقائياً
+        setTimeout(function () {
 
-        if (number === "") {
-            alert("الرجاء إدخال رقم الخطة");
-            return;
-        }
+            document.getElementById("welcomeScreen").classList.add("hidden");
+            document.getElementById("homePage").classList.remove("hidden");
 
-        if (plans[number]) {
+        },3000);
 
-            document.getElementById("routeName").value = plans[number].route;
+    },2000);
 
-            missionBtn.style.display = "block";
-            historyBtn.style.display = "block";
+};
 
-        } else {
 
-            alert("رقم الخطة غير موجود");
+// البحث عن الخطة
 
-            document.getElementById("routeName").value = "";
+document.getElementById("searchBtn").onclick=function(){
 
-            missionBtn.style.display = "none";
-            historyBtn.style.display = "none";
-        }
+    let number=document.getElementById("planNumber").value.trim();
 
-    };
+    if(number===""){
 
-    missionBtn.onclick = function () {
-        alert("سيتم إنشاء صفحة المهمة في الخطوة التالية.");
-    };
+        alert("أدخل رقم الخطة");
 
-    historyBtn.onclick = function () {
-        alert("سيتم إنشاء صفحة السجل في الخطوة التالية.");
-    };
+        return;
 
-});
+    }
+
+    if(plans[number]){
+
+        document.getElementById("routeName").value=plans[number].route;
+
+        document.getElementById("historyBtn").classList.remove("hidden");
+
+        document.getElementById("missionBtn").classList.remove("hidden");
+
+    }else{
+
+        alert("رقم الخطة غير موجود");
+
+        document.getElementById("routeName").value="";
+
+        document.getElementById("historyBtn").classList.add("hidden");
+
+        document.getElementById("missionBtn").classList.add("hidden");
+
+    }
+
+};
+
+
+// بدء المهمة
+
+document.getElementById("missionBtn").onclick=function(){
+
+    alert("الخطوة التالية ستكون صفحة المهمة.");
+
+};
+
+
+// السجل
+
+document.getElementById("historyBtn").onclick=function(){
+
+    alert("الخطوة التالية ستكون صفحة السجل.");
+
+};
