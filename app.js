@@ -1,19 +1,10 @@
 window.onload = function () {
+    alert("تم تحميل JavaScript");
 
-setTimeout(function(){
+    setTimeout(function () {
+        alert("بعد ثانيتين");
 
-document.getElementById("splashScreen").style.display="none";
-
-document.getElementById("welcomeScreen").classList.remove("hidden");
-
-},2000);
-
-document.getElementById("startBtn").onclick=function(){
-
-document.getElementById("welcomeScreen").classList.add("hidden");
-
-document.getElementById("homePage").classList.remove("hidden");
-
-};
-
+        document.getElementById("splashScreen").style.display = "none";
+        document.getElementById("welcomeScreen").classList.remove("hidden");
+    }, 2000);
 };
