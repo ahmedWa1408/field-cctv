@@ -1,105 +1,354 @@
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap');
+
 *{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Tahoma,sans-serif;
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
 }
 
 body{
-background:#eef3f8;
-direction:rtl;
-padding:20px;
+    direction:rtl;
+    background:#eef4fb;
+    font-family:'Cairo',sans-serif;
+    color:#1f2937;
 }
 
 .container{
-max-width:900px;
-margin:auto;
-background:#fff;
-padding:20px;
-border-radius:15px;
-box-shadow:0 5px 20px rgba(0,0,0,.15);
+    width:95%;
+    max-width:1200px;
+    margin:25px auto;
 }
 
-h1{
-text-align:center;
-color:#1565c0;
-margin-bottom:25px;
+.top-header{
+    background:#0f4c81;
+    color:#fff;
+    border-radius:18px;
+    padding:20px 25px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    box-shadow:0 10px 25px rgba(0,0,0,.15);
 }
 
-h2{
-margin:20px 0 10px;
-color:#333;
+.logo-area{
+    display:flex;
+    align-items:center;
+    gap:18px;
 }
 
-label{
-display:block;
-margin-top:15px;
-margin-bottom:6px;
-font-weight:bold;
+.logo{
+    width:75px;
+    height:75px;
+    object-fit:contain;
 }
 
-input{
-width:100%;
-padding:12px;
-border:1px solid #ccc;
-border-radius:8px;
-font-size:16px;
+.title-box h1{
+    font-size:34px;
+    font-weight:800;
 }
 
-.search-row{
-display:flex;
-gap:10px;
+.title-box p{
+    font-size:20px;
+    margin-top:5px;
 }
 
-.search-row input{
-flex:1;
+.welcome-card,
+.plan-card,
+.employee-card,
+.sites-card,
+.notes-card,
+.supervisor-card{
+    background:#fff;
+    border-radius:18px;
+    padding:25px;
+    margin-top:22px;
+    box-shadow:0 8px 20px rgba(0,0,0,.08);
 }
 
-button{
-padding:12px 20px;
-background:#1565c0;
-color:#fff;
-border:none;
-border-radius:8px;
-font-size:16px;
-cursor:pointer;
+.welcome-card{
+    text-align:center;
 }
 
-button:hover{
-background:#0d47a1;
+.welcome-card h2{
+    color:#0f4c81;
+    font-size:30px;
+    margin-bottom:12px;
 }
 
-.route-box{
-margin-top:20px;
+.welcome-card p{
+    font-size:20px;
+    line-height:2;
 }
 
-hr{
-margin:25px 0;
-border:none;
-border-top:1px solid #ddd;
+#startButton{
+    margin-top:20px;
+    background:#0f4c81;
+    color:#fff;
+    border:none;
+    padding:14px 40px;
+    border-radius:12px;
+    font-size:20px;
+    font-weight:700;
+    cursor:pointer;
+}.plan-search{
+    display:flex;
+    gap:15px;
+    align-items:end;
+    flex-wrap:wrap;
 }
 
-#sitesTable{
-margin-top:30px;
+.input-group{
+    flex:1;
+    min-width:220px;
 }
-/* ===== تحسين خطوط الخطة والمسار ===== */
 
-@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap');
+.input-group label{
+    display:block;
+    margin-bottom:8px;
+    font-size:18px;
+    font-weight:700;
+    color:#0f4c81;
+}
 
-body{
-    font-family: 'Cairo', sans-serif;
+input,
+textarea,
+select{
+    width:100%;
+    padding:14px;
+    border:2px solid #d9e4f2;
+    border-radius:12px;
+    font-family:'Cairo',sans-serif;
+    font-size:18px;
+    transition:.3s;
+    background:#fff;
+}
+
+input:focus,
+textarea:focus,
+select:focus{
+    outline:none;
+    border-color:#0f4c81;
+    box-shadow:0 0 8px rgba(15,76,129,.2);
 }
 
 #planNumber{
     font-size:32px;
-    font-weight:800;
     text-align:center;
-    color:#0b3d91;
+    font-weight:800;
+    color:#0f4c81;
 }
 
 #routeName{
     font-size:26px;
-    font-weight:700;
     text-align:center;
-    color:#1d3557;
+    font-weight:800;
+    color:#1b4965;
+    background:#f4f8fc;
+}
+
+.button-group{
+    display:flex;
+    align-items:end;
+}
+
+.search-btn,
+#searchButton{
+    background:#0f4c81;
+    color:#fff;
+    border:none;
+    border-radius:12px;
+    padding:14px 35px;
+    font-size:20px;
+    font-weight:700;
+    cursor:pointer;
+}
+
+.search-btn:hover,
+#searchButton:hover{
+    background:#0c3d68;
+}
+
+.route-card{
+    margin-top:25px;
+    padding:20px;
+    border-radius:15px;
+    background:#edf5ff;
+    border-right:6px solid #0f4c81;
+}
+
+.route-card label{
+    display:block;
+    font-size:18px;
+    font-weight:700;
+    margin-bottom:10px;
+}
+
+.history-btn{
+    width:100%;
+    margin-top:18px;
+    background:#1565c0;
+    color:#fff;
+    border:none;
+    padding:15px;
+    border-radius:12px;
+    font-size:20px;
+    font-weight:700;
+    cursor:pointer;
+}
+
+.start-task-btn{
+    width:100%;
+    margin-top:15px;
+    background:#2e7d32;
+    color:#fff;
+    border:none;
+    padding:15px;
+    border-radius:12px;
+    font-size:20px;
+    font-weight:700;
+    cursor:pointer;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:18px;.sites-table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:20px;
+    overflow:hidden;
+    border-radius:15px;
+}
+
+.sites-table th{
+    background:#0f4c81;
+    color:#fff;
+    padding:15px;
+    font-size:18px;
+    text-align:center;
+}
+
+.sites-table td{
+    border:1px solid #dce5ef;
+    padding:12px;
+    text-align:center;
+    background:#fff;
+}
+
+.sites-table tr:nth-child(even){
+    background:#f8fbff;
+}
+
+.sites-table a{
+    color:#1565c0;
+    font-weight:700;
+    text-decoration:none;
+}
+
+.sites-table a:hover{
+    text-decoration:underline;
+}
+
+.approve-btn,
+.save-btn,
+.pdf-btn,
+.print-btn{
+    border:none;
+    border-radius:12px;
+    padding:14px 24px;
+    color:#fff;
+    font-size:18px;
+    font-weight:700;
+    cursor:pointer;
+}
+
+.approve-btn{
+    background:#2e7d32;
+}
+
+.save-btn{
+    background:#1565c0;
+}
+
+.pdf-btn{
+    background:#ef6c00;
+}
+
+.print-btn{
+    background:#455a64;
+}
+
+.action-buttons{
+    display:flex;
+    gap:15px;
+    flex-wrap:wrap;
+    justify-content:center;
+    margin-top:25px;
+}
+
+.action-buttons button{
+    min-width:180px;
+}
+
+footer{
+    margin-top:35px;
+    text-align:center;
+    color:#607d8b;
+    font-size:16px;
+    padding:25px 0;
+}
+
+@media (max-width:768px){
+
+.top-header{
+    flex-direction:column;
+    text-align:center;
+}
+
+.logo-area{
+    flex-direction:column;
+}
+
+.title-box h1{
+    font-size:28px;
+}
+
+.title-box p{
+    font-size:18px;
+}
+
+.plan-search{
+    flex-direction:column;
+}
+
+.button-group{
+    width:100%;
+}
+
+#searchButton{
+    width:100%;
+}
+
+#planNumber{
+    font-size:28px;
+}
+
+#routeName{
+    font-size:22px;
+}
+
+.action-buttons{
+    flex-direction:column;
+}
+
+.action-buttons button{
+    width:100%;
+}
+
+.sites-table{
+    display:block;
+    overflow-x:auto;
+}
+
+}
 }
