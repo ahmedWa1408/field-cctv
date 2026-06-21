@@ -4,9 +4,11 @@
 <head>
 
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>الحركة الميدانية | CCTV</title>
+<meta name="viewport"
+content="width=device-width,initial-scale=1.0">
+
+<title>الحركة الميدانية CCTV</title>
 
 <link rel="stylesheet" href="style.css">
 
@@ -18,49 +20,83 @@
 
 <div id="splashScreen" class="splash">
 
-<img src="IMG_3707.jpeg" class="logo" alt="Tahakom">
+<img
+src="assets/logo.png"
+class="logo"
+alt="Logo">
+
+<h2>إدارة أنظمة المراقبة الأمنية</h2>
+
+<p>قسم التشغيل CCTV</p>
 
 </div>
+
+
 
 <!-- شاشة الترحيب -->
 
 <div id="welcomeScreen" class="welcome hidden">
 
-<div class="welcome-card">
+<div class="welcomeCard">
 
-<h1>الحركة الميدانية</h1>
+<h1>
 
-<h2>قسم التشغيل CCTV</h2>
+الحركة الميدانية
 
-<div class="line"></div>
+</h1>
 
 <p>
 
 نسأل الله لكم التوفيق والسلامة
-<br>
 في أداء مهامكم الميدانية.
 
 </p>
 
+<button id="startSystemBtn">
+
+دخول النظام
+
+</button>
+
 </div>
 
 </div>
+
+
 
 <!-- الصفحة الرئيسية -->
 
 <div id="homePage" class="hidden">
 
-<header>
+<header class="mainHeader">
 
-<h1>الحركة الميدانية</h1>
+<div>
 
-<p>قسم التشغيل CCTV</p>
+<h1>
 
-</header>
+الحركة الميدانية
 
-<section class="search-card">
+</h1>
 
-<div id="searchCard">
+<p>
+
+قسم التشغيل CCTV
+
+</p>
+
+</div>
+
+<div>
+
+<img
+src="assets/logo.png"
+class="headerLogo">
+
+</div>
+
+</header><section class="searchSection">
+
+<div class="searchCard" id="searchCard">
 
 <h2>بيانات الخطة</h2>
 
@@ -77,9 +113,15 @@ placeholder="أدخل رقم الخطة">
 
 </button>
 
-</div><div id="routeCard" class="hidden">
+</div>
 
-<h2>اسم المسار</h2>
+
+
+<div class="routeCard hidden" id="routeCard">
+
+<h2>بيانات المسار</h2>
+
+<label>اسم المسار</label>
 
 <input
 type="text"
@@ -88,42 +130,74 @@ readonly>
 
 <button id="backBtn">
 
-⬅ الرجوع لرقم الخطة
+⬅ رجوع
 
 </button>
 
 </div>
 
-<div id="actionButtons" class="buttons hidden">
+
+
+<div
+class="actionButtons hidden"
+id="actionButtons">
 
 <button id="missionBtn">
 
-▶ بدء المهمة
+🚗 بدء المهمة
 
 </button>
 
 <button id="historyBtn">
 
-📁 سجل العمليات السابقة
+📋 سجل العمليات
+
+</button>
+
+<button id="adminBtn">
+
+🛠 الإدارة
+
+</button>
+
+<button id="settingsBtn">
+
+⚙️ الإعدادات
 
 </button>
 
 </div>
 
-</section>
+</section><footer class="mainFooter">
 
-<footer>
+<div>
 
 إدارة أنظمة المراقبة الأمنية
 
-<br>
+</div>
+
+<div>
 
 قسم التشغيل CCTV
 
+</div>
+
+<div>
+
+الإصدار 1.0
+
+</div>
+
 </footer>
 
-</div><script src="plans.js"></script>
+</div>
+
+<!-- JavaScript -->
+
+<script src="plans.js"></script>
+
 <script src="app.js"></script>
 
 </body>
+
 </html>
