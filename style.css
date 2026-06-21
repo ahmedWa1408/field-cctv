@@ -225,4 +225,29 @@ font-size:28px;
 font-size:24px;
 }
 
+}#planNumber{
+    text-align:center;
+    font-size:32px;
+    font-weight:bold;
+    color:#6c3fa3;
+}
+
+#routeName{
+    text-align:center;
+    font-size:30px;
+    font-weight:bold;
+    color:#008b8b;
+}
+
+#backBtn{
+    width:100%;
+    margin-top:20px;
+    padding:18px;
+    border:none;
+    border-radius:16px;
+    background:#ececec;
+    color:#444;
+    font-size:20px;
+    font-weight:bold;
+    cursor:pointer;
 }
