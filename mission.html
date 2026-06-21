@@ -5,10 +5,9 @@
 
 <meta charset="UTF-8">
 
-<meta name="viewport"
-content="width=device-width,initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 
-<title>المهمة الميدانية</title>
+<title>تنفيذ المهمة</title>
 
 <link rel="stylesheet" href="mission.css">
 
@@ -16,34 +15,31 @@ content="width=device-width,initial-scale=1.0">
 
 <body>
 
-<header class="topHeader">
+<header class="topBar">
+
+<div class="logoBox">
+
+<img src="assets/logo.png" class="logo">
+
+<div>
 
 <h1>الحركة الميدانية</h1>
 
 <p>قسم التشغيل CCTV</p>
 
-</header>
-
-<div class="container">
-
-<div class="card">
-
-<h2>بيانات المهمة</h2>
-
-<div class="grid">
-
-<div>
-
-<label>رقم الخطة</label>
-
-<input
-type="text"
-id="planNumber"
-readonly>
+</div>
 
 </div>
 
-<div>
+<div class="planBox">
+
+<div class="planCircle">
+
+<span id="planNumber"></span>
+
+</div>
+
+<div class="routeBox">
 
 <label>اسم المسار</label>
 
@@ -54,29 +50,35 @@ readonly>
 
 </div>
 
-<div>
+</div>
+
+</header>
+
+
+
+<section class="dashboard">
+
+<div class="card">
 
 <label>اسم المشغل</label>
 
 <input
 type="text"
-id="operatorName"
-placeholder="اسم المشغل">
+id="operatorName">
 
 </div>
 
-<div>
+<div class="card">
 
 <label>رقم ID</label>
 
 <input
 type="text"
-id="employeeId"
-placeholder="رقم الموظف">
+id="employeeId">
 
 </div>
 
-<div>
+<div class="card">
 
 <label>رقم السيارة</label>
 
@@ -86,7 +88,7 @@ id="carNumber">
 
 </div>
 
-<div>
+<div class="card">
 
 <label>رقم اللابتوب</label>
 
@@ -96,7 +98,7 @@ id="laptopNumber">
 
 </div>
 
-<div>
+<div class="card">
 
 <label>عدد الفلاشات</label>
 
@@ -106,7 +108,7 @@ id="flashCount">
 
 </div>
 
-<div>
+<div class="card">
 
 <label>عدد الهاردسكات</label>
 
@@ -116,17 +118,33 @@ id="hddCount">
 
 </div>
 
+<div class="card">
+
+<label>مشرف الفترة</label>
+
+<input
+type="text"
+id="supervisor">
+
 </div>
 
-</div><div class="card">
+<div class="card">
 
-<h2>معلومات المهمة</h2>
+<label>اعتماد</label>
 
-<div class="grid">
+<button id="approveBtn">
 
-<div>
+اعتماد
 
-<label>بداية المهمة</label>
+</button>
+
+</div>
+
+</section><section class="statusSection">
+
+<div class="statusCard">
+
+<h3>بداية المهمة</h3>
 
 <input
 type="text"
@@ -135,9 +153,9 @@ readonly>
 
 </div>
 
-<div>
+<div class="statusCard">
 
-<label>نهاية المهمة</label>
+<h3>نهاية المهمة</h3>
 
 <input
 type="text"
@@ -146,9 +164,9 @@ readonly>
 
 </div>
 
-<div>
+<div class="statusCard">
 
-<label>إجمالي ساعات العمل</label>
+<h3>مدة المهمة</h3>
 
 <input
 type="text"
@@ -157,39 +175,116 @@ readonly>
 
 </div>
 
+<div class="statusCard">
+
+<h3>الوقت المباشر</h3>
+
+<div id="liveTimer" class="timer">
+
+00:00:00
+
 </div>
 
-<div class="progressBox">
+</div>
+
+<div class="statusCard progressCard">
 
 <h3>نسبة الإنجاز</h3>
 
-<div class="progressBar">
+<div class="progressCircle">
 
-<div id="progressFill"></div>
+<svg width="170" height="170">
+
+<circle
+cx="85"
+cy="85"
+r="70"
+class="circleBg">
+
+</circle>
+
+<circle
+cx="85"
+cy="85"
+r="70"
+class="circleProgress"
+id="progressCircle">
+
+</circle>
+
+</svg>
+
+<div class="progressText">
+
+<span id="progressPercent">
+
+0%
+
+</span>
 
 </div>
 
-<p>
+</div>
 
-<span id="completedSites">0</span>
+<div class="progressInfo">
 
-/
+<span>
 
-<span id="totalSites">0</span>
+تم الإنجاز
 
-موقع
+<strong id="completedSites">
 
-</p>
+0
+
+</strong>
+
+</span>
+
+<span>
+
+إجمالي المواقع
+
+<strong id="totalSites">
+
+0
+
+</strong>
+
+</span>
 
 </div>
 
 </div>
 
-<div class="card">
+</section><section class="tableSection">
 
-<h2>جدول المواقع</h2>
+<div class="tableHeader">
 
-<div class="tableWrapper">
+<h2>المواقع الميدانية</h2>
+
+<div class="tableStats">
+
+<span>
+
+المواقع المنجزة :
+
+<strong id="completedCounter">0</strong>
+
+</span>
+
+<span>
+
+المتبقي :
+
+<strong id="remainingCounter">0</strong>
+
+</span>
+
+</div>
+
+</div>
+
+<div class="tableContainer">
 
 <table id="sitesTable">
 
@@ -203,15 +298,21 @@ readonly>
 
 <th>نوع التخزين</th>
 
-<th>📍 الموقع</th>
+<th>فتح الموقع</th>
+
+<th>XML</th>
 
 <th>حالة الموقع</th>
 
-<th>بداية الرصد</th>
+<th>📅 بداية الرصد</th>
 
-<th>نهاية الرصد</th>
+<th>🕒 وقت البداية</th>
 
-<th>مدة الرصد</th>
+<th>📅 نهاية الرصد</th>
+
+<th>🕒 وقت النهاية</th>
+
+<th>⏱ مدة الرصد</th>
 
 <th>📷 الصور</th>
 
@@ -229,54 +330,69 @@ readonly>
 
 </div>
 
-</div><div class="card">
+</section><section class="bottomActions">
 
-<h2>الإجراءات</h2>
+<div class="notesCard">
 
-<div class="actions">
+<h2>ملاحظات عامة</h2>
+
+<textarea
+id="generalNotes"
+placeholder="اكتب أي ملاحظات عامة تخص المهمة..."></textarea>
+
+</div>
+
+<div class="actionButtons">
 
 <button id="saveBtn">
+
 💾 حفظ المهمة
-</button>
 
-<button id="pdfBtn">
-📄 تصدير PDF
-</button>
-
-<button id="excelBtn">
-📊 تصدير Excel
-</button>
-
-<button id="printBtn">
-🖨️ طباعة
-</button>
-
-<button id="copyLinkBtn">
-🔗 نسخ رابط الخطة
-</button>
-
-<button id="shareBtn">
-📤 مشاركة الخطة
 </button>
 
 <button id="finishBtn">
+
 ✅ إنهاء المهمة
+
+</button>
+
+<button id="printBtn">
+
+🖨️ طباعة
+
+</button>
+
+<button id="pdfBtn">
+
+📄 PDF
+
+</button>
+
+<button id="excelBtn">
+
+📊 Excel
+
+</button>
+
+<button id="copyLinkBtn">
+
+🔗 نسخ رابط الخطة
+
+</button>
+
+<button id="shareBtn">
+
+📤 مشاركة
+
 </button>
 
 </div>
 
-</div>
-
-</div>
-
-<!-- الملفات -->
+</section>
 
 <script src="plans.js"></script>
-
 <script src="storage.js"></script>
-
 <script src="export.js"></script>
-
 <script src="mission.js"></script>
 
 </body>
