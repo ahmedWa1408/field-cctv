@@ -16,85 +16,134 @@ document.addEventListener("DOMContentLoaded", function () {
     const planNumber = document.getElementById("planNumber");
     const routeName = document.getElementById("routeName");
 
-    // شاشة الشعار
-    setTimeout(function () {
+    // شاشة البداية
+
+    setTimeout(function(){
 
         splash.classList.add("hidden");
+
         welcome.classList.remove("hidden");
 
-        // رسالة الترحيب
-        setTimeout(function () {
+        setTimeout(function(){
 
             welcome.classList.add("hidden");
+
             home.classList.remove("hidden");
 
         },3000);
 
-    },2000);
-
-
+    },2000);    //========================================
     // البحث عن الخطة
+    //========================================
 
-    searchBtn.onclick = function(){
+    searchBtn.onclick = function () {
 
-        let number = planNumber.value.trim();
+        const number = planNumber.value.trim();
 
-        if(number===""){
+        if (number === "") {
 
-            alert("أدخل رقم الخطة");
+            alert("أدخل رقم الخطة أولاً");
+
+            planNumber.focus();
+
             return;
 
         }
 
-        if(plans[number]){
-
-            routeName.value = plans[number].route;
-
-            searchCard.classList.add("hidden");
-
-            routeCard.classList.remove("hidden");
-
-            actionButtons.classList.remove("hidden");
-
-        }else{
+        if (!plans[number]) {
 
             alert("رقم الخطة غير موجود");
 
+            planNumber.focus();
+
+            return;
+
         }
+
+        routeName.value = plans[number].route;
+
+        searchCard.classList.add("hidden");
+
+        routeCard.classList.remove("hidden");
+
+        actionButtons.classList.remove("hidden");
 
     };
 
 
+
+    //========================================
     // الرجوع
+    //========================================
 
-    backBtn.onclick = function(){
-
-        searchCard.classList.remove("hidden");
+    backBtn.onclick = function () {
 
         routeCard.classList.add("hidden");
 
         actionButtons.classList.add("hidden");
 
+        searchCard.classList.remove("hidden");
+
+        routeName.value = "";
+
         planNumber.focus();
 
-    };
-
-
+    };    //========================================
     // بدء المهمة
+    //========================================
 
-    missionBtn.onclick = function(){
+    missionBtn.onclick = function () {
 
-        alert("سيتم فتح صفحة المهمة في الخطوة القادمة.");
+        const number = planNumber.value.trim();
+
+        if (number === "") {
+
+            alert("أدخل رقم الخطة أولاً");
+
+            return;
+
+        }
+
+        if (!plans[number]) {
+
+            alert("رقم الخطة غير موجود");
+
+            return;
+
+        }
+
+        window.location.href =
+        "mission.html?plan=" +
+        encodeURIComponent(number);
 
     };
 
 
-    // السجل
 
-    historyBtn.onclick = function(){
+    //========================================
+    // سجل العمليات
+    //========================================
 
-        alert("سيتم فتح سجل العمليات السابقة.");
+    historyBtn.onclick = function () {
+
+        window.location.href = "history.html";
 
     };
+
+
+
+    //========================================
+    // البحث عند الضغط على Enter
+    //========================================
+
+    planNumber.addEventListener("keydown", function (e) {
+
+        if (e.key === "Enter") {
+
+            searchBtn.click();
+
+        }
+
+    });
 
 });
