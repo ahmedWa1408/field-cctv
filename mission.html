@@ -1,1 +1,166 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
 
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>تنفيذ المهمة</title>
+
+<link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+<header>
+
+<div class="title">
+
+<div>
+
+<h1>تنفيذ المهمة</h1>
+
+<p id="routeTitle">
+
+جاري تحميل بيانات الخطة...
+
+</p>
+
+</div>
+
+</div>
+
+</header>
+
+<section class="search-card">
+
+<h2>
+
+بيانات المهمة
+
+</h2>
+
+<div class="form-grid">
+
+<div>
+
+<label>اسم المشغل</label>
+
+<input type="text" id="operatorName">
+
+</div>
+
+<div>
+
+<label>رقم ID</label>
+
+<input type="text" id="employeeId">
+
+</div>
+
+<div>
+
+<label>رقم السيارة</label>
+
+<input type="text" id="carNumber">
+
+</div>
+
+<div>
+
+<label>رقم اللابتوب</label>
+
+<input type="text" id="laptopNumber">
+
+</div>
+
+<div>
+
+<label>عدد الفلاشات</label>
+
+<input type="number" id="flashCount">
+
+</div>
+
+<div>
+
+<label>عدد الهاردسكات</label>
+
+<input type="number" id="hardCount">
+
+</div>
+
+</div><table class="mission-table">
+
+<thead>
+
+<tr>
+
+<th>رمز الموقع</th>
+
+<th>نوع التخزين</th>
+
+<th>بداية المجلد</th>
+
+<th>نهاية المجلد</th>
+
+<th>بداية الرصد</th>
+
+<th>نهاية الرصد</th>
+
+<th>عدد الساعات</th>
+
+<th>XML</th>
+
+<th>الموقع</th>
+
+<th>الحالة</th>
+
+<th>ملاحظات</th>
+
+</tr>
+
+</thead>
+
+<tbody id="sitesTable">
+
+</tbody>
+
+</table>
+
+<div class="buttons">
+
+<button id="saveMission">
+
+💾 حفظ المهمة
+
+</button>
+
+<button id="finishMission">
+
+✅ إنهاء المهمة
+
+</button>
+
+</div>
+
+</section><footer>
+
+إدارة أنظمة المراقبة الأمنية
+
+<br>
+
+قسم التشغيل CCTV
+
+</footer>
+
+<script src="plans.js"></script>
+
+<script src="mission.js"></script>
+
+</body>
+
+</html>
