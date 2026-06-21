@@ -4,9 +4,11 @@
 <head>
 
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>المهمة الميدانية | CCTV</title>
+<meta name="viewport"
+content="width=device-width,initial-scale=1.0">
+
+<title>المهمة الميدانية</title>
 
 <link rel="stylesheet" href="mission.css">
 
@@ -185,7 +187,7 @@ readonly>
 
 <div class="card">
 
-<h2>المواقع</h2>
+<h2>جدول المواقع</h2>
 
 <div class="tableWrapper">
 
@@ -201,9 +203,9 @@ readonly>
 
 <th>نوع التخزين</th>
 
-<th>الموقع</th>
+<th>📍 الموقع</th>
 
-<th>XML</th>
+<th>حالة الموقع</th>
 
 <th>بداية الرصد</th>
 
@@ -211,11 +213,9 @@ readonly>
 
 <th>مدة الرصد</th>
 
-<th>الصور</th>
+<th>📷 الصور</th>
 
-<th>الملاحظات</th>
-
-<th>الحالة</th>
+<th>📝 الملاحظات</th>
 
 </tr>
 
@@ -236,15 +236,15 @@ readonly>
 <div class="actions">
 
 <button id="saveBtn">
-💾 حفظ
+💾 حفظ المهمة
 </button>
 
 <button id="pdfBtn">
-📄 PDF
+📄 تصدير PDF
 </button>
 
 <button id="excelBtn">
-📊 Excel
+📊 تصدير Excel
 </button>
 
 <button id="printBtn">
@@ -259,7 +259,7 @@ readonly>
 📤 مشاركة الخطة
 </button>
 
-<button id="finishBtn" class="finish">
+<button id="finishBtn">
 ✅ إنهاء المهمة
 </button>
 
@@ -269,7 +269,14 @@ readonly>
 
 </div>
 
+<!-- الملفات -->
+
 <script src="plans.js"></script>
+
+<script src="storage.js"></script>
+
+<script src="export.js"></script>
+
 <script src="mission.js"></script>
 
 </body>
