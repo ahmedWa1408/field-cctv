@@ -2,7 +2,7 @@
 margin:0;
 padding:0;
 box-sizing:border-box;
-font-family:'Tahoma',sans-serif;
+font-family:Tahoma,Arial,sans-serif;
 }
 
 body{
@@ -20,10 +20,10 @@ display:none!important;
 .splash{
 position:fixed;
 inset:0;
-background:#fff;
 display:flex;
 justify-content:center;
 align-items:center;
+background:#fff;
 z-index:9999;
 }
 
@@ -51,10 +51,10 @@ transform:scale(1);
 .welcome{
 position:fixed;
 inset:0;
-background:#eef2f6;
 display:flex;
 justify-content:center;
 align-items:center;
+background:#eef2f6;
 padding:20px;
 z-index:999;
 }
@@ -64,51 +64,54 @@ width:100%;
 max-width:520px;
 background:#fff;
 border-radius:28px;
-padding:45px 30px;
+padding:45px 35px;
 text-align:center;
 box-shadow:0 15px 35px rgba(0,0,0,.12);
 }
 
 .welcome-card h1{
 font-size:42px;
-color:#6c3fa3;
-margin-bottom:10px;
+color:#6d3fa9;
+margin-bottom:12px;
 }
 
 .welcome-card h2{
 font-size:24px;
-color:#63c6c6;
+color:#36c5c8;
 margin-bottom:25px;
 }
 
 .line{
-width:120px;
-height:5px;
+width:130px;
+height:6px;
 margin:auto;
-border-radius:20px;
-background:linear-gradient(to left,#6c3fa3,#63c6c6);
-margin-bottom:30px;
+margin-bottom:28px;
+border-radius:30px;
+background:linear-gradient(90deg,#36c5c8,#6d3fa9);
 }
 
 .welcome-card p{
 font-size:24px;
-line-height:1.9;
+line-height:1.8;
 color:#555;
-}/* الصفحة الرئيسية */
+}
+
+/* الصفحة الرئيسية */
 
 #homePage{
 min-height:100vh;
 }
 
 header{
-background:linear-gradient(90deg,#63c6c6,#6c3fa3);
-padding:30px 20px;
+background:linear-gradient(90deg,#36c5c8,#6d3fa9);
+padding:35px 20px;
 text-align:center;
 color:#fff;
+box-shadow:0 8px 20px rgba(0,0,0,.15);
 }
 
 header h1{
-font-size:40px;
+font-size:38px;
 margin-bottom:8px;
 }
 
@@ -118,7 +121,7 @@ font-size:22px;
 
 .search-card{
 width:94%;
-max-width:600px;
+max-width:620px;
 margin:35px auto;
 background:#fff;
 padding:30px;
@@ -129,7 +132,7 @@ box-shadow:0 15px 35px rgba(0,0,0,.10);
 .search-card h2{
 text-align:center;
 font-size:34px;
-color:#6c3fa3;
+color:#6d3fa9;
 margin-bottom:25px;
 }
 
@@ -137,44 +140,71 @@ margin-bottom:25px;
 display:block;
 font-size:22px;
 font-weight:bold;
-margin-bottom:10px;
-color:#444;
-}
-
-.search-row{
+margin-bottom:12px;
+color:#555;
+}.search-row{
 display:flex;
-gap:12px;
-margin-bottom:20px;
+gap:15px;
+align-items:center;
+margin-bottom:25px;
 }
 
 .search-row input{
 flex:1;
 }
 
-.search-card input{
+#planNumber{
 width:100%;
-padding:18px;
-border:2px solid #d9dfe8;
-border-radius:16px;
-font-size:28px;
+height:90px;
+font-size:46px;
+font-weight:900;
 text-align:center;
-background:#fafbfd;
-}
-
-.search-card input:focus{
-border-color:#63c6c6;
+color:#6d3fa9;
+background:#fff;
+border:3px solid #d9dfe8;
+border-radius:20px;
 outline:none;
+transition:.3s;
 }
 
-#searchBtn{
-width:150px;
+#planNumber:focus{
+border-color:#36c5c8;
+box-shadow:0 0 12px rgba(54,197,200,.25);
+}
+
+#searchBtn,
+#backBtn{
+width:100%;
+height:65px;
+margin-top:15px;
 border:none;
-border-radius:16px;
-background:linear-gradient(90deg,#63c6c6,#6c3fa3);
+border-radius:18px;
+background:linear-gradient(90deg,#36c5c8,#6d3fa9);
 color:#fff;
 font-size:24px;
 font-weight:bold;
 cursor:pointer;
+transition:.3s;
+}
+
+#searchBtn:hover,
+#backBtn:hover,
+.buttons button:hover{
+transform:translateY(-2px);
+}
+
+#routeName{
+width:100%;
+height:90px;
+font-size:38px;
+font-weight:900;
+text-align:center;
+border:3px solid #d9dfe8;
+border-radius:20px;
+outline:none;
+background:#fff;
+color:#6d3fa9;
+margin-top:15px;
 }
 
 .buttons{
@@ -185,69 +215,62 @@ margin-top:25px;
 }
 
 .buttons button{
-padding:18px;
+height:65px;
 border:none;
-border-radius:16px;
-background:linear-gradient(90deg,#63c6c6,#6c3fa3);
+border-radius:18px;
+background:linear-gradient(90deg,#36c5c8,#6d3fa9);
 color:#fff;
 font-size:22px;
 font-weight:bold;
 cursor:pointer;
+transition:.3s;
 }
 
 footer{
 text-align:center;
-padding:30px;
+padding:35px 20px;
 font-size:18px;
 color:#666;
 }
 
 @media(max-width:768px){
 
-.search-row{
-flex-direction:column;
-}
-
-#searchBtn{
-width:100%;
-height:60px;
+.search-card{
+padding:22px;
 }
 
 header h1{
 font-size:32px;
 }
 
+header p{
+font-size:20px;
+}
+
 .search-card h2{
 font-size:28px;
 }
 
-.search-card input{
-font-size:24px;
+.search-row{
+flex-direction:column;
 }
 
-}#planNumber{
-    text-align:center;
-    font-size:32px;
-    font-weight:bold;
-    color:#6c3fa3;
+#planNumber{
+height:80px;
+font-size:40px;
 }
 
 #routeName{
-    text-align:center;
-    font-size:30px;
-    font-weight:bold;
-    color:#008b8b;
+height:80px;
+font-size:32px;
 }
 
-#backBtn{
-    width:100%;
-    margin-top:20px;
-    padding:18px;
-    border:none;
-    border-radius:16px;
-    background:#ececec;
-    color:#444;
-    font-size:20px;
-    font-weight:bold;
-    cursor:pointer;
+#searchBtn,
+#backBtn,
+.buttons button{
+width:100%;
+height:60px;
+font-size:20px;
+}
+
 }
