@@ -6,7 +6,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>الحركة الميدانية لقسم التشغيل CCTV</title>
+<title>الحركة الميدانية - قسم التشغيل CCTV</title>
 
 <link rel="stylesheet" href="style.css">
 
@@ -14,19 +14,67 @@
 
 <body>
 
-<div class="container">
+<!-- شاشة البداية -->
 
-<header class="top-header">
+<div id="splashScreen" class="splash">
 
-<div class="logo-area">
+    <img src="images/logo.png" class="logo">
 
-<img src="images/logo.png" class="logo" alt="شعار">
+    <h1>إدارة أنظمة المراقبة الأمنية</h1>
 
-<div class="title-box">
+    <h2>قسم التشغيل CCTV</h2>
 
-<h1>الحركة الميدانية</h1>
+</div>
 
-<p>لقسم التشغيل CCTV</p>
+<!-- رسالة الترحيب -->
+
+<div id="welcomeScreen" class="welcome hidden">
+
+    <div class="card">
+
+        <h1>مرحباً بكم</h1>
+
+        <p>
+
+نسأل الله لكم التوفيق والسلامة
+
+في أداء مهامكم الميدانية.
+
+        </p>
+
+        <button id="startBtn">
+
+بدء العمل
+
+        </button>
+
+    </div>
+
+</div>
+
+<!-- الصفحة الرئيسية -->
+
+<div id="homePage" class="hidden">
+
+<header>
+
+<div class="title">
+
+<img src="images/logo.png" class="small-logo">
+
+<div>
+
+<h1>
+
+الحركة الميدانية
+
+</h1>
+
+<p>
+
+قسم التشغيل CCTV
+
+</p>
 
 </div>
 
@@ -34,59 +82,39 @@
 
 </header>
 
-<section class="welcome-card" id="welcomeCard">
+<section class="search-card">
 
-<h2>مرحباً بكم</h2>
+<h2>
 
-<p>
+بيانات الخطة
 
-نسأل الله لكم التوفيق والسلامة في أداء مهامكم الميدانية.
+</h2>
 
-</p>
+<label>
 
-<button id="startButton">
+رقم الخطة
 
-بدء العمل
+</label>
 
-</button>
-
-</section>
-
-<section class="plan-card">
-
-<h2>بيانات الخطة</h2>
-
-<div class="plan-search">
-
-<div class="input-group">
-
-<label>رقم الخطة</label>
+<div class="search-row">
 
 <input
+
 type="number"
+
 id="planNumber"
-placeholder="أدخل رقم الخطة">
 
-</div>
+placeholder="أدخل رقم الخطة"
 
-<div class="button-group">
+>
 
-<button
-id="searchButton"
-onclick="searchPlan()">
+<button id="searchBtn">
 
 بحث
 
 </button>
 
 </div>
-
-</div>
-
-<div
-class="route-card"
-id="routeCard"
-style="display:none;">
 
 <label>
 
@@ -95,21 +123,36 @@ style="display:none;">
 </label>
 
 <input
+
 type="text"
+
 id="routeName"
-readonly>
+
+readonly
+
+>
+
+<div class="buttons">
 
 <button
-class="history-btn"
-id="historyButton">
+
+id="historyBtn"
+
+style="display:none;"
+
+>
 
 📁 سجل العمليات السابقة للخطة
 
 </button>
 
 <button
-class="start-task-btn"
-id="missionButton">
+
+id="missionBtn"
+
+style="display:none;"
+
+>
 
 ▶ بدء المهمة
 
@@ -117,192 +160,13 @@ id="missionButton">
 
 </div>
 
-</section><section
-class="employee-card"
-id="employeeCard"
-style="display:none;">
-
-<h2>بيانات الموظف</h2>
-
-<div class="grid">
-
-<div>
-
-<label>اسم الموظف</label>
-
-<input
-type="text"
-id="employeeName">
-
-</div>
-
-<div>
-
-<label>الرقم الوظيفي</label>
-
-<input
-type="text"
-id="employeeId">
-
-</div>
-
-<div>
-
-<label>رقم السيارة</label>
-
-<input
-type="text"
-id="carNumber">
-
-</div>
-
-<div>
-
-<label>رقم اللابتوب</label>
-
-<input
-type="text"
-id="laptopNumber">
-
-</div>
-
-<div>
-
-<label>عدد الفلاشات</label>
-
-<input
-type="number"
-id="flashCount">
-
-</div>
-
-<div>
-
-<label>عدد الهاردسكات</label>
-
-<input
-type="number"
-id="hardCount">
-
-</div>
-
-</div>
-
-</section>
-
-<section
-class="sites-card"
-id="sitesCard"
-style="display:none;">
-
-<h2>جدول المواقع</h2>
-
-<div id="sitesTable"></div>
-
-</section>
-
-<section
-class="notes-card"
-id="notesCard"
-style="display:none;">
-
-<h2>الملاحظات العامة</h2>
-
-<textarea
-id="generalNotes"
-rows="5"
-placeholder="اكتب الملاحظات العامة هنا..."></textarea>
-
-<label>الصور العامة</label>
-
-<input
-type="file"
-id="generalImages"
-multiple
-accept="image/*">
-
-</section>
-
-<section
-class="supervisor-card"
-id="supervisorCard"
-style="display:none;">
-
-<h2>اعتماد مشرف الفترة</h2>
-
-<div class="grid">
-
-<div>
-
-<label>مشرف الفترة</label>
-
-<input
-type="text"
-id="supervisorName">
-
-</div>
-
-<div>
-
-<label>رقم ID</label>
-
-<input
-type="text"
-id="supervisorId">
-
-</div>
-
-<div class="approve-box">
-
-<button
-class="approve-btn">
-
-✔ اعتماد
-
-</button>
-
-</div>
-
-</div>
-
-</section><section
-class="action-buttons"
-id="actionButtons"
-style="display:none;">
-
-<button class="save-btn">
-
-💾 حفظ العملية
-
-</button>
-
-<button class="pdf-btn">
-
-📄 تصدير PDF
-
-</button>
-
-<button class="print-btn">
-
-🖨️ طباعة
-
-</button>
-
 </section>
 
 <footer>
 
-<p>
+إدارة أنظمة المراقبة الأمنية
 
-إدارة أنظمة المراقبة الأمنية – قسم التشغيل CCTV
-
-</p>
-
-<p>
-
-© جميع الحقوق محفوظة
-
-</p>
+قسم التشغيل CCTV
 
 </footer>
 
