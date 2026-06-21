@@ -1,1 +1,318 @@
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Tahoma,Arial,sans-serif;
+}
 
+body{
+background:#eef2f6;
+color:#333;
+}
+
+.topHeader{
+background:linear-gradient(90deg,#35c6d8,#6c3fa3);
+color:#fff;
+text-align:center;
+padding:25px 15px;
+box-shadow:0 8px 20px rgba(0,0,0,.15);
+}
+
+.topHeader h1{
+font-size:34px;
+margin-bottom:6px;
+}
+
+.topHeader p{
+font-size:20px;
+}
+
+.container{
+width:96%;
+max-width:1700px;
+margin:25px auto;
+}
+
+.card{
+background:#fff;
+border-radius:22px;
+padding:25px;
+margin-bottom:25px;
+box-shadow:0 10px 30px rgba(0,0,0,.08);
+}
+
+.card h2{
+text-align:center;
+color:#6c3fa3;
+font-size:30px;
+margin-bottom:25px;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+gap:18px;
+}
+
+.grid label{
+display:block;
+font-size:18px;
+font-weight:bold;
+margin-bottom:8px;
+color:#444;
+}
+
+.grid input{
+width:100%;
+height:55px;
+border:2px solid #d7dce8;
+border-radius:14px;
+padding:10px;
+font-size:18px;
+background:#fafafa;
+}
+
+.grid input:focus{
+outline:none;
+border-color:#35c6d8;
+}/* مؤشر الإنجاز */
+
+.progressBox{
+margin-top:25px;
+}
+
+.progressBox h3{
+text-align:center;
+margin-bottom:15px;
+color:#6c3fa3;
+font-size:24px;
+}
+
+.progressBar{
+width:100%;
+height:18px;
+background:#e4e7ec;
+border-radius:30px;
+overflow:hidden;
+}
+
+#progressFill{
+width:0%;
+height:100%;
+background:linear-gradient(90deg,#35c6d8,#6c3fa3);
+transition:.4s;
+}
+
+.progressBox p{
+margin-top:10px;
+text-align:center;
+font-size:20px;
+font-weight:bold;
+color:#555;
+}
+
+/* الجدول */
+
+.tableWrapper{
+overflow-x:auto;
+border-radius:18px;
+border:1px solid #ddd;
+}
+
+#sitesTable{
+width:100%;
+min-width:1700px;
+border-collapse:collapse;
+background:#fff;
+}
+
+#sitesTable thead th{
+position:sticky;
+top:0;
+background:#6c3fa3;
+color:#fff;
+padding:14px;
+font-size:16px;
+white-space:nowrap;
+z-index:2;
+}
+
+#sitesTable td{
+padding:10px;
+border-bottom:1px solid #ececec;
+text-align:center;
+vertical-align:middle;
+}
+
+#sitesTable tbody tr:nth-child(even){
+background:#fafafa;
+}
+
+#sitesTable tbody tr:hover{
+background:#eef9ff;
+}
+
+#sitesTable input,
+#sitesTable select,
+#sitesTable textarea{
+width:100%;
+border:1px solid #d6dbe5;
+border-radius:10px;
+padding:8px;
+font-size:15px;
+background:#fff;
+}
+
+#sitesTable textarea{
+resize:vertical;
+min-height:60px;
+}
+
+/* ألوان الحالات */
+
+.status-working{
+background:#e9f9ec !important;
+}
+
+.status-warning{
+background:#fff5df !important;
+}
+
+.status-brown{
+background:#efe6dc !important;
+}
+
+.status-danger{
+background:#fdeaea !important;
+}
+
+/* زر الموقع */
+
+.mapBtn{
+background:#35c6d8;
+color:#fff;
+border:none;
+border-radius:10px;
+padding:8px 12px;
+cursor:pointer;
+font-weight:bold;
+}
+
+.mapBtn:hover{
+opacity:.9;
+}
+
+/* زر الصور */
+
+.photoBtn{
+background:#6c3fa3;
+color:#fff;
+border:none;
+border-radius:10px;
+padding:8px 12px;
+cursor:pointer;
+font-weight:bold;
+}
+
+.photoBtn:hover{
+opacity:.9;
+}/* الأزرار */
+
+.actions{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+gap:15px;
+margin-top:20px;
+}
+
+.actions button{
+height:58px;
+border:none;
+border-radius:15px;
+font-size:18px;
+font-weight:bold;
+cursor:pointer;
+transition:.3s;
+color:#fff;
+}
+
+#saveBtn{
+background:#35c6d8;
+}
+
+#pdfBtn{
+background:#d9534f;
+}
+
+#excelBtn{
+background:#28a745;
+}
+
+#printBtn{
+background:#6c757d;
+}
+
+#copyLinkBtn{
+background:#17a2b8;
+}
+
+#shareBtn{
+background:#6f42c1;
+}
+
+#finishBtn{
+background:#ff9800;
+}
+
+.actions button:hover{
+transform:translateY(-3px);
+box-shadow:0 10px 20px rgba(0,0,0,.15);
+}
+
+.actions button:active{
+transform:scale(.98);
+}
+
+/* الجوال */
+
+@media(max-width:768px){
+
+.topHeader h1{
+font-size:28px;
+}
+
+.topHeader p{
+font-size:18px;
+}
+
+.card{
+padding:18px;
+}
+
+.card h2{
+font-size:24px;
+}
+
+.grid{
+grid-template-columns:1fr;
+}
+
+.grid input{
+height:50px;
+font-size:16px;
+}
+
+#sitesTable{
+min-width:1500px;
+}
+
+.actions{
+grid-template-columns:1fr;
+}
+
+.actions button{
+height:55px;
+font-size:17px;
+}
+
+}
