@@ -1,1 +1,254 @@
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Tahoma,Arial,sans-serif;
+}
 
+body{
+background:#eef2f6;
+color:#333;
+}
+
+.topHeader{
+background:linear-gradient(90deg,#35c6d8,#6c3fa3);
+padding:28px;
+text-align:center;
+color:#fff;
+box-shadow:0 8px 20px rgba(0,0,0,.15);
+}
+
+.topHeader h1{
+font-size:34px;
+margin-bottom:8px;
+}
+
+.topHeader p{
+font-size:20px;
+}
+
+.container{
+width:96%;
+max-width:1700px;
+margin:25px auto;
+}
+
+.card{
+background:#fff;
+padding:25px;
+border-radius:22px;
+margin-bottom:25px;
+box-shadow:0 10px 30px rgba(0,0,0,.08);
+}
+
+.card h2{
+text-align:center;
+font-size:30px;
+color:#6c3fa3;
+margin-bottom:25px;
+}
+
+.filters{
+display:grid;
+grid-template-columns:2fr 1fr 1fr auto;
+gap:15px;
+align-items:center;
+}
+
+.filters input{
+height:55px;
+padding:10px;
+font-size:18px;
+border:2px solid #d7dce8;
+border-radius:14px;
+outline:none;
+}
+
+.filters input:focus{
+border-color:#35c6d8;
+}
+
+#searchBtn{
+height:55px;
+padding:0 25px;
+border:none;
+border-radius:14px;
+background:linear-gradient(90deg,#35c6d8,#6c3fa3);
+color:#fff;
+font-size:18px;
+font-weight:bold;
+cursor:pointer;
+}/* بطاقات الإحصائيات */
+
+.stats{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:20px;
+}
+
+.stat{
+background:linear-gradient(135deg,#35c6d8,#6c3fa3);
+color:#fff;
+border-radius:18px;
+padding:20px;
+text-align:center;
+}
+
+.stat span{
+display:block;
+font-size:36px;
+font-weight:bold;
+margin-bottom:10px;
+}
+
+.stat p{
+font-size:18px;
+}
+
+/* الجدول */
+
+.tableWrapper{
+overflow-x:auto;
+border-radius:18px;
+border:1px solid #ddd;
+}
+
+#historyTable{
+width:100%;
+min-width:1300px;
+border-collapse:collapse;
+background:#fff;
+}
+
+#historyTable thead th{
+position:sticky;
+top:0;
+background:#6c3fa3;
+color:#fff;
+padding:14px;
+font-size:16px;
+white-space:nowrap;
+}
+
+#historyTable td{
+padding:12px;
+text-align:center;
+border-bottom:1px solid #ececec;
+}
+
+#historyTable tbody tr:nth-child(even){
+background:#fafafa;
+}
+
+#historyTable tbody tr:hover{
+background:#eef9ff;
+}
+
+/* أزرار الإجراءات */
+
+.actionBtn{
+padding:8px 12px;
+margin:2px;
+border:none;
+border-radius:10px;
+color:#fff;
+cursor:pointer;
+font-size:14px;
+font-weight:bold;
+}
+
+.viewBtn{
+background:#35c6d8;
+}
+
+.editBtn{
+background:#ff9800;
+}
+
+.pdfBtn{
+background:#d9534f;
+}
+
+.excelBtn{
+background:#28a745;
+}
+
+.printBtn{
+background:#6c757d;
+}
+
+.linkBtn{
+background:#17a2b8;
+}
+
+.shareBtn{
+background:#6f42c1;
+}
+
+.deleteBtn{
+background:#b71c1c;
+}
+
+/* الأزرار السفلية */
+
+.actions{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:15px;
+}
+
+.actions button{
+height:58px;
+border:none;
+border-radius:15px;
+background:linear-gradient(90deg,#35c6d8,#6c3fa3);
+color:#fff;
+font-size:18px;
+font-weight:bold;
+cursor:pointer;
+transition:.3s;
+}
+
+.actions button:hover{
+transform:translateY(-3px);
+box-shadow:0 10px 20px rgba(0,0,0,.15);
+}
+
+/* الجوال */
+
+@media(max-width:768px){
+
+.filters{
+grid-template-columns:1fr;
+}
+
+.topHeader h1{
+font-size:28px;
+}
+
+.topHeader p{
+font-size:18px;
+}
+
+.card{
+padding:18px;
+}
+
+.card h2{
+font-size:24px;
+}
+
+#historyTable{
+min-width:1200px;
+}
+
+.actions{
+grid-template-columns:1fr;
+}
+
+.actions button{
+height:55px;
+font-size:17px;
+}
+
+}
