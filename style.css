@@ -1,231 +1,347 @@
+/* =====================================
+   TAHAKOM CCTV
+   Version 2.0
+===================================== */
+
 @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap');
 
+:root{
+
+--primary:#5B2C83;
+--secondary:#63C7C3;
+--background:#F4F7FB;
+--card:#FFFFFF;
+--text:#2E3440;
+--border:#E3EAF2;
+--shadow:0 12px 30px rgba(0,0,0,.08);
+--radius:22px;
+
+}
+
 *{
+
 margin:0;
 padding:0;
 box-sizing:border-box;
+
 }
 
 body{
+
 font-family:'Cairo',sans-serif;
-background:#edf3f9;
+background:var(--background);
+color:var(--text);
 direction:rtl;
-color:#1f2937;
 overflow-x:hidden;
+
 }
 
 .hidden{
+
 display:none!important;
+
 }
 
-a{
-text-decoration:none;
-color:inherit;
+img{
+
+max-width:100%;
+display:block;
+
 }
 
 button{
+
 font-family:'Cairo',sans-serif;
 cursor:pointer;
-transition:.3s;
 border:none;
+transition:.3s;
+
 }
 
 input,
 textarea,
 select{
-font-family:'Cairo',sans-serif;
-outline:none;
-}
 
-img{
-max-width:100%;
-display:block;
-}/*=========================
- شاشة البداية
-=========================*/
+font-family:'Cairo',sans-serif;
+outline:none;/* =====================================
+   Splash Screen
+===================================== */
 
 .splash{
+
 position:fixed;
 top:0;
 left:0;
 right:0;
 bottom:0;
-background:#0a4d88;
+
 display:flex;
 flex-direction:column;
 justify-content:center;
 align-items:center;
+
+background:linear-gradient(180deg,#ffffff,#eef3f8);
+
 z-index:9999;
+
 }
 
 .logo{
-width:170px;
-animation:logoZoom 1.5s ease;
+
+width:190px;
+margin-bottom:20px;
+
+animation:logoAnimation 1.2s ease;
+
 }
 
 .splash h1{
-margin-top:25px;
+
 font-size:34px;
 font-weight:800;
-color:#fff;
+
+color:var(--primary);
+
+margin-bottom:10px;
+
 text-align:center;
+
 }
 
 .splash h2{
-margin-top:10px;
+
 font-size:22px;
-font-weight:600;
-color:#dbeafe;
+
+color:var(--secondary);
+
+font-weight:700;
+
 text-align:center;
-}@keyframes logoZoom{
+
+}
+
+@keyframes logoAnimation{
 
 0%{
+
 opacity:0;
-transform:scale(.4);
+transform:scale(.6);
+
 }
 
 70%{
-transform:scale(1.08);
+
+transform:scale(1.05);
+
 }
 
 100%{
-opacity:1;
-transform:scale(1);
-}
 
-}/*=========================
- شاشة الترحيب
-=========================*/
+opacity:1;
+transform:scale(1);/* =====================================
+   Welcome Screen
+===================================== */
 
 .welcome{
+
 min-height:100vh;
+
 display:flex;
 justify-content:center;
 align-items:center;
+
 padding:25px;
-background:#edf3f9;
+
 }
 
 .card{
+
 width:100%;
-max-width:650px;
-background:#ffffff;
-border-radius:25px;
-padding:40px;
+max-width:700px;
+
+background:var(--card);
+
+border-radius:28px;
+
+padding:40px 30px;
+
+box-shadow:var(--shadow);
+
 text-align:center;
-box-shadow:0 15px 35px rgba(0,0,0,.12);
-animation:fadeUp .8s ease;
+
+animation:fadeUp .7s ease;
+
 }
 
 .card h1{
-font-size:42px;
+
+font-size:38px;
+
 font-weight:800;
-color:#0a4d88;
+
+color:var(--primary);
+
 margin-bottom:20px;
+
 }
 
 .card p{
-font-size:24px;
+
+font-size:22px;
+
 line-height:2;
-color:#444;
+
+color:#5b6574;
+
 margin-bottom:35px;
+
 }
 
 #startBtn{
+
 width:100%;
+
 padding:18px;
-background:#1565c0;
-color:#fff;
-font-size:24px;
-font-weight:700;
+
 border-radius:18px;
+
+background:linear-gradient(90deg,var(--primary),#7140a4);
+
+color:#fff;
+
+font-size:22px;
+
+font-weight:700;
+
 }
 
 #startBtn:hover{
-background:#0d47a1;
-transform:translateY(-3px);
-}@keyframes fadeUp{
+
+transform:translateY(-2px);
+
+box-shadow:0 12px 25px rgba(91,44,131,.25);
+
+}
+
+@keyframes fadeUp{
 
 from{
+
 opacity:0;
-transform:translateY(40px);
+transform:translateY(35px);
+
 }
 
 to{
-opacity:1;
-transform:translateY(0);
-}
 
-}/*=========================
-الهيدر
-=========================*/
+opacity:1;
+transform:translateY(0);/* =====================================
+   Header
+===================================== */
 
 #homePage{
+
 min-height:100vh;
+
 }
 
 header{
-background:#0a4d88;
+
+width:95%;
+max-width:900px;
+
+margin:20px auto;
+
+background:#ffffff;
+
+border-radius:28px;
+
 padding:22px;
-box-shadow:0 8px 20px rgba(0,0,0,.15);
+
+box-shadow:var(--shadow);
+
 }
 
 .title{
+
 display:flex;
+
 align-items:center;
-justify-content:space-between;
+
 gap:20px;
+
 }
 
 .small-logo{
-width:80px;
-height:80px;
+
+width:110px;
+
+height:110px;
+
 object-fit:contain;
+
+flex-shrink:0;
+
+}
+
+.title div{
+
+flex:1;
+
 }
 
 .title h1{
-color:#fff;
+
 font-size:34px;
+
 font-weight:800;
-margin:0;
+
+color:var(--primary);
+
+margin-bottom:8px;
+
 }
 
 .title p{
-color:#dbeafe;
+
 font-size:20px;
-margin-top:6px;
-}/*=========================
-بطاقة بيانات الخطة
-=========================*/
+
+font-weight:700;
+
+color:var(--secondary);
+
+line-height:1.8;/* =====================================
+   Plan Search Card
+===================================== */
 
 .search-card{
 
 width:95%;
 max-width:900px;
 
-margin:35px auto;
+margin:25px auto;
 
-background:#fff;
+background:var(--card);
 
 padding:30px;
 
-border-radius:22px;
+border-radius:28px;
 
-box-shadow:0 10px 25px rgba(0,0,0,.10);
+box-shadow:var(--shadow);
 
 }
 
 .search-card h2{
 
-font-size:32px;
+text-align:center;
 
-color:#0a4d88;
-
-margin-bottom:25px;
+font-size:30px;
 
 font-weight:800;
 
-text-align:center;
+color:var(--primary);
+
+margin-bottom:25px;
 
 }
 
@@ -233,21 +349,23 @@ text-align:center;
 
 display:block;
 
-font-size:20px;
+font-size:18px;
 
 font-weight:700;
 
 margin-bottom:10px;
 
-color:#333;
+color:var(--text);
 
-}.search-row{
+}
+
+.search-row{
 
 display:flex;
 
-gap:15px;
-
 align-items:center;
+
+gap:15px;
 
 margin-bottom:20px;
 
@@ -263,13 +381,17 @@ flex:1;
 
 width:100%;
 
-padding:16px;
+padding:16px 18px;
 
 font-size:22px;
 
-border:2px solid #d7e4f2;
+font-weight:700;
 
-border-radius:15px;
+background:#f8fafc;
+
+border:2px solid var(--border);
+
+border-radius:16px;
 
 transition:.3s;
 
@@ -277,7 +399,9 @@ transition:.3s;
 
 .search-card input:focus{
 
-border-color:#1565c0;
+border-color:var(--primary);
+
+background:#fff;
 
 }
 
@@ -285,49 +409,59 @@ border-color:#1565c0;
 
 text-align:center;
 
-font-size:30px;
-
-font-weight:800;
+font-size:28px;
 
 }
 
 #routeName{
 
-background:#f4f8fc;
-
 text-align:center;
 
-font-size:24px;
+color:var(--primary);
 
-font-weight:700;
+background:#eef6fb;
 
-color:#0a4d88;
+}
 
-}#searchBtn{
+#searchBtn{
 
 min-width:160px;
 
-padding:16px;
+padding:16px 24px;
 
-background:#1565c0;
+background:linear-gradient(90deg,var(--primary),#7444a5);
 
 color:#fff;
 
-font-size:22px;
+font-size:20px;
 
 font-weight:700;
 
-border-radius:15px;
+border-radius:16px;
 
 }
 
 #searchBtn:hover{
 
-background:#0d47a1;
+transform:translateY(-2px);
 
-}/*=========================
-الأزرار
-=========================*/
+box-shadow:0 10px 25px rgba(91,44,131,.25);
+
+}
+
+}
+
+}
+
+}
+
+}
+
+}
+
+}/* =====================================
+   Action Buttons
+===================================== */
 
 .buttons{
 
@@ -337,83 +471,105 @@ flex-direction:column;
 
 gap:15px;
 
-margin-top:25px;
+margin-top:30px;
+
+}
+
+#historyBtn,
+#missionBtn{
+
+display:none;
+
+width:100%;
+
+padding:18px;
+
+border-radius:16px;
+
+font-size:20px;
+
+font-weight:700;
+
+color:#fff;
+
+transition:.3s;
 
 }
 
 #historyBtn{
 
-padding:16px;
-
-background:#1565c0;
-
-color:#fff;
-
-font-size:21px;
-
-font-weight:700;
-
-border-radius:15px;
-
-display:none;
+background:linear-gradient(90deg,#4f46e5,#6366f1);
 
 }
 
 #historyBtn:hover{
 
-background:#0d47a1;
+transform:translateY(-2px);
+
+box-shadow:0 10px 25px rgba(79,70,229,.25);
 
 }
 
 #missionBtn{
 
-padding:16px;
-
-background:#2e7d32;
-
-color:#fff;
-
-font-size:21px;
-
-font-weight:700;
-
-border-radius:15px;
-
-display:none;
+background:linear-gradient(90deg,#0f9d58,#34a853);
 
 }
 
 #missionBtn:hover{
 
-background:#1b5e20;
+transform:translateY(-2px);
 
-}/*=========================
-Footer
-=========================*/
+box-shadow:0 10px 25px rgba(15,157,88,.25);
+
+}
+
+/* =====================================
+   Footer
+===================================== */
 
 footer{
 
-margin-top:50px;
-
-padding:25px;
-
 text-align:center;
 
-color:#607d8b;
+padding:35px 20px;
 
-font-size:17px;
+font-size:16px;
 
-}/*=========================
-Responsive
-=========================*/
+color:#7a8595;
 
-@media(max-width:768px){
+}
+
+/* =====================================
+   Responsive
+===================================== */
+
+@media (max-width:768px){
 
 .title{
 
 flex-direction:column;
 
 text-align:center;
+
+}
+
+.small-logo{
+
+width:90px;
+height:90px;
+
+}
+
+.title h1{
+
+font-size:28px;
+
+}
+
+.title p{
+
+font-size:18px;
 
 }
 
@@ -429,15 +585,9 @@ width:100%;
 
 }
 
-.small-logo{
+.search-card{
 
-width:70px;
-
-}
-
-.title h1{
-
-font-size:28px;
+padding:20px;
 
 }
 
@@ -449,13 +599,13 @@ padding:25px;
 
 .card h1{
 
-font-size:32px;
+font-size:30px;
 
 }
 
 .card p{
 
-font-size:22px;
+font-size:20px;
 
 }
 
