@@ -2,7 +2,7 @@
     margin:0;
     padding:0;
     box-sizing:border-box;
-    font-family:Tahoma,sans-serif;
+    font-family:Tahoma,Arial,sans-serif;
 }
 
 body{
@@ -10,117 +10,43 @@ body{
     color:#333;
 }
 
-.hidden{
-    display:none !important;
+.page{
+    min-height:100vh;
 }
 
-/* شاشة البداية */
-.splash{
-    position:fixed;
-    inset:0;
-    background:#fff;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    z-index:9999;
+.header{
+    background:linear-gradient(90deg,#63c6c6,#6d3fa9);
+    color:#fff;
+    text-align:center;
+    padding:35px 20px;
 }
 
 .logo{
-    width:220px;
-    max-width:70%;
+    width:120px;
+    display:block;
+    margin:0 auto 15px;
 }
 
-/* شاشة الترحيب */
-.welcome{
-    position:fixed;
-    inset:0;
-    background:#eef1f4;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    padding:20px;
-    z-index:999;
+.header h1{
+    font-size:42px;
+    margin-bottom:10px;
+}
+
+.header p{
+    font-size:24px;
 }
 
 .card{
-    width:100%;
-    max-width:430px;
-    background:#fff;
-    border-radius:28px;
-    padding:35px 25px;
-    text-align:center;
-    box-shadow:0 15px 40px rgba(0,0,0,.12);
-}
-
-.card h1{
-    font-size:46px;
-    color:#6d3fa9;
-    margin-bottom:18px;
-}
-
-.card h2{
-    font-size:28px;
-    color:#63c6c6;
-}
-
-.line{
-    width:170px;
-    height:6px;
-    margin:22px auto;
-    border-radius:20px;
-    background:linear-gradient(to left,#6d3fa9,#63c6c6);
-}
-
-.card p{
-    margin:30px 0;
-    font-size:25px;
-    line-height:1.8;
-    color:#555;
-}
-
-.card button{
-    width:100%;
-    border:none;
-    border-radius:18px;
-    padding:22px;
-    font-size:34px;
-    color:#fff;
-    cursor:pointer;
-    background:linear-gradient(to left,#6d3fa9,#63c6c6);
-}
-
-/* الصفحة الرئيسية */
-
-#homePage{
-    min-height:100vh;
-    background:#eef1f4;
-}
-
-header{
-    background:linear-gradient(to left,#6d3fa9,#63c6c6);
-    color:#fff;
-    text-align:center;
-    padding:30px 20px;
-}
-
-header h1{
-    font-size:40px;
-}
-
-header p{
-    margin-top:10px;
-    font-size:22px;
-}.search-card{
-    width:95%;
+    width:92%;
     max-width:520px;
     margin:30px auto;
     background:#fff;
     border-radius:24px;
     padding:25px;
-    box-shadow:0 10px 25px rgba(0,0,0,.10);
+    box-shadow:0 10px 30px rgba(0,0,0,.12);
 }
 
-.search-card h2{
+.card h2{
     text-align:center;
     color:#6d3fa9;
     font-size:34px;
@@ -129,28 +55,21 @@ header p{
 
 label{
     display:block;
+    margin-bottom:10px;
     font-size:22px;
     font-weight:bold;
-    margin-bottom:10px;
-    color:#444;
 }
 
-.search-row{
+.searchBox{
     display:flex;
-    gap:12px;
+    gap:10px;
     margin-bottom:20px;
-}
-
-.search-row input{
-    flex:1;
-}
-
-input{
+}input{
     width:100%;
     padding:18px;
-    border:2px solid #d9d9d9;
+    border:2px solid #d7d7d7;
     border-radius:16px;
-    font-size:28px;
+    font-size:24px;
     text-align:center;
     outline:none;
     transition:.3s;
@@ -158,71 +77,70 @@ input{
 
 input:focus{
     border-color:#63c6c6;
-    box-shadow:0 0 10px rgba(99,198,198,.25);
+    box-shadow:0 0 12px rgba(99,198,198,.25);
 }
 
-.search-row button{
+#searchBtn{
     min-width:120px;
     border:none;
     border-radius:16px;
+    background:linear-gradient(90deg,#63c6c6,#6d3fa9);
+    color:#fff;
     font-size:24px;
     font-weight:bold;
-    color:#fff;
     cursor:pointer;
-    background:linear-gradient(to left,#6d3fa9,#63c6c6);
 }
 
-.buttons{
-    display:flex;
-    flex-direction:column;
-    gap:15px;
-    margin-top:25px;
-}
-
-.buttons button{
+#missionBtn,
+#historyBtn{
     width:100%;
+    margin-top:15px;
+    padding:18px;
     border:none;
     border-radius:16px;
-    padding:18px;
+    background:linear-gradient(90deg,#63c6c6,#6d3fa9);
+    color:#fff;
     font-size:24px;
     font-weight:bold;
-    color:#fff;
     cursor:pointer;
-    background:linear-gradient(to left,#6d3fa9,#63c6c6);
 }
 
 footer{
     text-align:center;
     color:#666;
-    font-size:20px;
     padding:30px 20px;
+    font-size:18px;
 }
 
 @media (max-width:600px){
 
-    .card h1{
-        font-size:40px;
+    .header h1{
+        font-size:36px;
     }
 
-    .card p{
+    .header p{
         font-size:22px;
     }
 
-    .search-card h2{
+    .card h2{
         font-size:30px;
     }
 
-    input{
-        font-size:24px;
+    label{
+        font-size:20px;
     }
 
-    .search-row{
+    .searchBox{
         flex-direction:column;
     }
 
-    .search-row button{
+    #searchBtn{
         width:100%;
         min-height:60px;
+    }
+
+    input{
+        font-size:22px;
     }
 
 }
