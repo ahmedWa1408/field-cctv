@@ -1,20 +1,14 @@
-/* =====================================
-   TAHAKOM CCTV
-   Version 2.0
-===================================== */
-
 @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap');
 
 :root{
 
 --primary:#5B2C83;
 --secondary:#63C7C3;
---background:#F4F7FB;
+--background:#F5F7FB;
 --card:#FFFFFF;
---text:#2E3440;
---border:#E3EAF2;
+--text:#2F3542;
+--border:#E4EAF1;
 --shadow:0 12px 30px rgba(0,0,0,.08);
---radius:22px;
 
 }
 
@@ -29,9 +23,13 @@ box-sizing:border-box;
 body{
 
 font-family:'Cairo',sans-serif;
-background:var(--background);
+
+background:linear-gradient(180deg,#ffffff,#f4f7fb);
+
 color:var(--text);
+
 direction:rtl;
+
 overflow-x:hidden;
 
 }
@@ -45,6 +43,7 @@ display:none!important;
 img{
 
 max-width:100%;
+
 display:block;
 
 }
@@ -52,102 +51,120 @@ display:block;
 button{
 
 font-family:'Cairo',sans-serif;
-cursor:pointer;
+
 border:none;
+
+cursor:pointer;
+
 transition:.3s;
 
 }
 
-input,
-textarea,
-select{
+input{
 
 font-family:'Cairo',sans-serif;
-outline:none;/* =====================================
-   Splash Screen
-===================================== */
+
+outline:none;
+
+}
+
+
+
+
+
+
+/*================ Splash ================*/
 
 .splash{
 
 position:fixed;
+
 top:0;
+
 left:0;
+
 right:0;
+
 bottom:0;
 
 display:flex;
-flex-direction:column;
+
 justify-content:center;
+
 align-items:center;
 
-background:linear-gradient(180deg,#ffffff,#eef3f8);
+background:#ffffff;
 
 z-index:9999;
+
+animation:splashFade .8s;
 
 }
 
 .logo{
 
 width:190px;
-margin-bottom:20px;
 
-animation:logoAnimation 1.2s ease;
-
-}
-
-.splash h1{
-
-font-size:34px;
-font-weight:800;
-
-color:var(--primary);
-
-margin-bottom:10px;
-
-text-align:center;
+animation:logoZoom 1.4s;
 
 }
 
-.splash h2{
-
-font-size:22px;
-
-color:var(--secondary);
-
-font-weight:700;
-
-text-align:center;
-
-}
-
-@keyframes logoAnimation{
+@keyframes logoZoom{
 
 0%{
 
 opacity:0;
+
 transform:scale(.6);
 
 }
 
-70%{
+60%{
 
-transform:scale(1.05);
+transform:scale(1.08);
 
 }
 
 100%{
 
 opacity:1;
-transform:scale(1);/* =====================================
-   Welcome Screen
-===================================== */
+
+transform:scale(1);
+
+}
+
+}
+
+@keyframes splashFade{
+
+from{
+
+opacity:0;
+
+}
+
+to{
+
+opacity:1;
+
+}
+
+}
+
+
+
+
+
+/*================ Welcome ================*/
 
 .welcome{
 
 min-height:100vh;
 
 display:flex;
+
 justify-content:center;
+
 align-items:center;
 
 padding:25px;
@@ -157,31 +174,56 @@ padding:25px;
 .card{
 
 width:100%;
-max-width:700px;
 
-background:var(--card);
+max-width:650px;
 
-border-radius:28px;
+background:#fff;
 
-padding:40px 30px;
+border-radius:30px;
+
+padding:45px 35px;
 
 box-shadow:var(--shadow);
 
 text-align:center;
 
-animation:fadeUp .7s ease;
+animation:cardUp .7s;
 
 }
 
 .card h1{
 
-font-size:38px;
-
-font-weight:800;
+font-size:40px;
 
 color:var(--primary);
 
-margin-bottom:20px;
+font-weight:800;
+
+}
+
+.card h2{
+
+margin-top:10px;
+
+font-size:24px;
+
+color:var(--secondary);
+
+font-weight:700;
+
+}
+
+.line{
+
+width:90px;
+
+height:5px;
+
+background:var(--secondary);
+
+border-radius:30px;
+
+margin:25px auto;
 
 }
 
@@ -191,7 +233,7 @@ font-size:22px;
 
 line-height:2;
 
-color:#5b6574;
+color:#555;
 
 margin-bottom:35px;
 
@@ -205,7 +247,7 @@ padding:18px;
 
 border-radius:18px;
 
-background:linear-gradient(90deg,var(--primary),#7140a4);
+background:linear-gradient(90deg,#5B2C83,#7648A5);
 
 color:#fff;
 
@@ -223,21 +265,25 @@ box-shadow:0 12px 25px rgba(91,44,131,.25);
 
 }
 
-@keyframes fadeUp{
+@keyframes cardUp{
 
 from{
 
 opacity:0;
-transform:translateY(35px);
+
+transform:translateY(40px);
 
 }
 
 to{
 
 opacity:1;
-transform:translateY(0);/* =====================================
-   Header
-===================================== */
+
+transform:translateY(0);
+
+}
+
+}/*================ Header ================*/
 
 #homePage{
 
@@ -248,15 +294,16 @@ min-height:100vh;
 header{
 
 width:95%;
+
 max-width:900px;
 
-margin:20px auto;
+margin:25px auto;
 
-background:#ffffff;
+background:#fff;
 
 border-radius:28px;
 
-padding:22px;
+padding:28px;
 
 box-shadow:var(--shadow);
 
@@ -266,33 +313,17 @@ box-shadow:var(--shadow);
 
 display:flex;
 
+justify-content:center;
+
 align-items:center;
 
-gap:20px;
-
-}
-
-.small-logo{
-
-width:110px;
-
-height:110px;
-
-object-fit:contain;
-
-flex-shrink:0;
-
-}
-
-.title div{
-
-flex:1;
+text-align:center;
 
 }
 
 .title h1{
 
-font-size:34px;
+font-size:36px;
 
 font-weight:800;
 
@@ -310,22 +341,27 @@ font-weight:700;
 
 color:var(--secondary);
 
-line-height:1.8;/* =====================================
-   Plan Search Card
-===================================== */
+}
+
+
+
+
+
+/*================ Search Card ================*/
 
 .search-card{
 
 width:95%;
+
 max-width:900px;
 
 margin:25px auto;
 
-background:var(--card);
-
-padding:30px;
+background:#fff;
 
 border-radius:28px;
+
+padding:30px;
 
 box-shadow:var(--shadow);
 
@@ -341,7 +377,7 @@ font-weight:800;
 
 color:var(--primary);
 
-margin-bottom:25px;
+margin-bottom:30px;
 
 }
 
@@ -349,13 +385,13 @@ margin-bottom:25px;
 
 display:block;
 
+margin-bottom:10px;
+
 font-size:18px;
 
 font-weight:700;
 
-margin-bottom:10px;
-
-color:var(--text);
+color:#444;
 
 }
 
@@ -363,11 +399,11 @@ color:var(--text);
 
 display:flex;
 
-align-items:center;
-
 gap:15px;
 
-margin-bottom:20px;
+align-items:center;
+
+margin-bottom:25px;
 
 }
 
@@ -381,17 +417,17 @@ flex:1;
 
 width:100%;
 
-padding:16px 18px;
+padding:18px;
 
-font-size:22px;
-
-font-weight:700;
-
-background:#f8fafc;
+background:#f7f9fc;
 
 border:2px solid var(--border);
 
 border-radius:16px;
+
+font-size:22px;
+
+font-weight:700;
 
 transition:.3s;
 
@@ -409,7 +445,7 @@ background:#fff;
 
 text-align:center;
 
-font-size:28px;
+font-size:30px;
 
 }
 
@@ -417,9 +453,9 @@ font-size:28px;
 
 text-align:center;
 
-color:var(--primary);
+background:#eef8f7;
 
-background:#eef6fb;
+color:var(--primary);
 
 }
 
@@ -427,9 +463,9 @@ background:#eef6fb;
 
 min-width:160px;
 
-padding:16px 24px;
+padding:18px;
 
-background:linear-gradient(90deg,var(--primary),#7444a5);
+background:linear-gradient(90deg,#5B2C83,#7648A5);
 
 color:#fff;
 
@@ -445,23 +481,9 @@ border-radius:16px;
 
 transform:translateY(-2px);
 
-box-shadow:0 10px 25px rgba(91,44,131,.25);
+box-shadow:0 10px 20px rgba(91,44,131,.20);
 
-}
-
-}
-
-}
-
-}
-
-}
-
-}
-
-}/* =====================================
-   Action Buttons
-===================================== */
+}/*================ Buttons ================*/
 
 .buttons{
 
@@ -498,7 +520,7 @@ transition:.3s;
 
 #historyBtn{
 
-background:linear-gradient(90deg,#4f46e5,#6366f1);
+background:linear-gradient(90deg,#3B82F6,#2563EB);
 
 }
 
@@ -506,13 +528,13 @@ background:linear-gradient(90deg,#4f46e5,#6366f1);
 
 transform:translateY(-2px);
 
-box-shadow:0 10px 25px rgba(79,70,229,.25);
+box-shadow:0 12px 24px rgba(59,130,246,.25);
 
 }
 
 #missionBtn{
 
-background:linear-gradient(90deg,#0f9d58,#34a853);
+background:linear-gradient(90deg,#16A34A,#22C55E);
 
 }
 
@@ -520,44 +542,34 @@ background:linear-gradient(90deg,#0f9d58,#34a853);
 
 transform:translateY(-2px);
 
-box-shadow:0 10px 25px rgba(15,157,88,.25);
+box-shadow:0 12px 24px rgba(34,197,94,.25);
 
 }
 
-/* =====================================
-   Footer
-===================================== */
+/*================ Footer ================*/
 
 footer{
 
-text-align:center;
+margin-top:45px;
 
-padding:35px 20px;
+padding:25px;
+
+text-align:center;
 
 font-size:16px;
 
-color:#7a8595;
+color:#6B7280;
 
 }
 
-/* =====================================
-   Responsive
-===================================== */
+/*================ Responsive ================*/
 
-@media (max-width:768px){
+@media(max-width:768px){
 
-.title{
+header,
+.search-card{
 
-flex-direction:column;
-
-text-align:center;
-
-}
-
-.small-logo{
-
-width:90px;
-height:90px;
+width:92%;
 
 }
 
@@ -569,7 +581,7 @@ font-size:28px;
 
 .title p{
 
-font-size:18px;
+font-size:17px;
 
 }
 
@@ -585,21 +597,21 @@ width:100%;
 
 }
 
-.search-card{
-
-padding:20px;
-
-}
-
 .card{
 
-padding:25px;
+padding:30px 20px;
 
 }
 
 .card h1{
 
-font-size:30px;
+font-size:32px;
+
+}
+
+.card h2{
+
+font-size:20px;
 
 }
 
@@ -608,5 +620,33 @@ font-size:30px;
 font-size:20px;
 
 }
+
+}
+
+/*================ Animations ================*/
+
+button:active{
+
+transform:scale(.98);
+
+}
+
+input{
+
+transition:.3s;
+
+}
+
+input:hover{
+
+border-color:#cbd5e1;
+
+}
+
+.search-card,
+.card,
+header{
+
+animation:fadeUp .5s ease;
 
 }
