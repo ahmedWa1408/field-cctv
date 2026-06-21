@@ -1,130 +1,184 @@
-//==================================================
-// mission.js
-// نظام الحركة الميدانية CCTV
-// الإصدار النهائي
-//==================================================
+//======================================================
+// الحركة الميدانية CCTV
+// mission.js الإصدار النهائي
+//======================================================
 
-//--------------- عناصر الصفحة ----------------//
+"use strict";
 
-const params = new URLSearchParams(window.location.search);
+//======================================
+// قراءة رقم الخطة
+//======================================
 
-const planNumber = params.get("plan");
+const url=new URLSearchParams(window.location.search);
 
-let currentPlan = null;
+const planId=url.get("plan");
 
-const planInput = document.getElementById("planNumber");
-const routeInput = document.getElementById("routeName");
-
-const operatorInput = document.getElementById("operatorName");
-const employeeInput = document.getElementById("employeeId");
-const carInput = document.getElementById("carNumber");
-const laptopInput = document.getElementById("laptopNumber");
-const flashInput = document.getElementById("flashCount");
-const hddInput = document.getElementById("hddCount");
-
-const missionStartInput = document.getElementById("missionStart");
-const missionEndInput = document.getElementById("missionEnd");
-const workHoursInput = document.getElementById("workHours");
-
-const progressFill = document.getElementById("progressFill");
-const completedSites = document.getElementById("completedSites");
-const totalSites = document.getElementById("totalSites");
-
-const sitesBody = document.getElementById("sitesBody");
+let currentPlan=null;
 
 
+//======================================
+// عناصر الصفحة
+//======================================
 
-//==================================================
-// بداية الصفحة
-//==================================================
+const planNumber=document.getElementById("planNumber");
+const routeName=document.getElementById("routeName");
 
-window.onload = function () {
+const operatorName=document.getElementById("operatorName");
+const employeeId=document.getElementById("employeeId");
+const carNumber=document.getElementById("carNumber");
+const laptopNumber=document.getElementById("laptopNumber");
+const flashCount=document.getElementById("flashCount");
+const hddCount=document.getElementById("hddCount");
+const supervisor=document.getElementById("supervisor");
 
-    if (!planNumber) {
+const missionStart=document.getElementById("missionStart");
+const missionEnd=document.getElementById("missionEnd");
+const workHours=document.getElementById("workHours");
 
-        alert("لم يتم اختيار رقم الخطة");
+const liveTimer=document.getElementById("liveTimer");
 
-        window.location.href = "index.html";
+const progressPercent=document.getElementById("progressPercent");
+const progressCircle=document.getElementById("progressCircle");
 
-        return;
+const completedSites=document.getElementById("completedSites");
+const totalSites=document.getElementById("totalSites");
 
-    }
+const completedCounter=document.getElementById("completedCounter");
+const remainingCounter=document.getElementById("remainingCounter");
 
-    if (!plans[planNumber]) {
+const sitesBody=document.getElementById("sitesBody");
 
-        alert("الخطة غير موجودة");
-
-        window.location.href = "index.html";
-
-        return;
-
-    }
-
-    currentPlan = plans[planNumber];
-
-    planInput.value = planNumber;
-
-    routeInput.value = currentPlan.route;
-
-    startMission();
-
-    buildSitesTable();
-
-    restoreMission();
-
-};
+const generalNotes=document.getElementById("generalNotes");
 
 
+//======================================
+// تشغيل الصفحة
+//======================================
 
-//==================================================
-// بداية المهمة
-//==================================================
+window.addEventListener("load",initMission);
 
-function startMission() {
+function initMission(){
 
-    if (missionStartInput.value !== "") return;
+if(!planId){
 
-    missionStartInput.value = formatDateTime(new Date());
+location.href="index.html";
+
+return;
+
+}
+
+if(!plans[planId]){
+
+alert("الخطة غير موجودة");
+
+location.href="index.html";
+
+return;
+
+}
+
+currentPlan=plans[planId];
+
+planNumber.textContent=planId;
+
+routeName.value=currentPlan.route;
+
+loadMission();
+
+createMissionStart();
+
+buildTable();
+
+restoreMission();
+
+startMissionTimer();
+
+updateProgress();
 
 }
 
 
+//======================================
+// بداية المهمة
+//======================================
 
-//==================================================
-// تنسيق التاريخ والوقت
-//==================================================
+function createMissionStart(){
 
-function formatDateTime(date) {
+if(missionStart.value!="") return;
 
-    const d = String(date.getDate()).padStart(2, "0");
+const saved=
 
-    const m = String(date.getMonth() + 1).padStart(2, "0");
+localStorage.getItem(
 
-    const y = date.getFullYear();
+"missionStart_"+planId
 
-    const h = String(date.getHours()).padStart(2, "0");
+);
 
-    const min = String(date.getMinutes()).padStart(2, "0");
+if(saved){
 
-    return `${d}/${m}/${y} ${h}:${min}`;
+missionStart.value=saved;
 
-}//==================================================
-// إنشاء جدول المواقع
-//==================================================
+return;
 
-function buildSitesTable() {
+}
 
-    sitesBody.innerHTML = "";
+const now=new Date();
 
-    totalSites.textContent = currentPlan.sites.length;
+missionStart.value=formatDate(now);
 
-    currentPlan.sites.forEach(function (site, index) {
+localStorage.setItem(
 
-        const row = document.createElement("tr");
+"missionStart_"+planId,
 
-        row.innerHTML = `
+missionStart.value
 
-<td>${index + 1}</td>
+);
+
+}
+
+
+//======================================
+// تنسيق التاريخ
+//======================================
+
+function formatDate(date){
+
+const d=String(date.getDate()).padStart(2,"0");
+
+const m=String(date.getMonth()+1).padStart(2,"0");
+
+const y=date.getFullYear();
+
+const h=String(date.getHours()).padStart(2,"0");
+
+const i=String(date.getMinutes()).padStart(2,"0");
+
+return d+"/"+m+"/"+y+" "+h+":"+i;
+
+}
+
+
+//======================================
+// إنشاء الجدول
+//======================================
+
+function buildTable(){
+
+sitesBody.innerHTML="";
+
+totalSites.textContent=currentPlan.sites.length;
+
+remainingCounter.textContent=currentPlan.sites.length;
+
+currentPlan.sites.forEach((site,index)=>{
+
+const tr=document.createElement("tr");
+
+tr.dataset.index=index;
+
+tr.innerHTML=`
+
+<td>${index+1}</td>
 
 <td>${site.code}</td>
 
@@ -133,10 +187,10 @@ function buildSitesTable() {
 <td>
 
 <a href="${site.map}"
-target="_blank"
-class="mapBtn">
 
-📍 فتح الموقع
+target="_blank">
+
+📍
 
 </a>
 
@@ -144,9 +198,23 @@ class="mapBtn">
 
 <td>
 
-<select class="statusSelect">
+<select class="xml">
 
-<option value="">اختر الحالة</option>
+<option value="">-</option>
+
+<option>يوجد</option>
+
+<option>لا يوجد</option>
+
+</select>
+
+</td>
+
+<td>
+
+<select class="status">
+
+<option value="">اختر</option>
 
 <option value="working">🟢 يعمل</option>
 
@@ -162,727 +230,728 @@ class="mapBtn">
 
 <td>
 
-<input
-type="date"
-class="startDate">
+<input type="date" class="startDate">
+
+</td>
+
+<td>
+
+<input type="time" class="startTime">
+
+</td>
+
+<td>
+
+<input type="date" class="endDate">
+
+</td>
+
+<td>
+
+<input type="time" class="endTime">
+
+</td>
+
+<td>
+
+<input type="text"
+
+class="duration"
+
+readonly>
 
 </td>
 
 <td>
 
 <input
-type="time"
-class="startTime">
 
-</td>
-
-<td>
-
-<input
-type="date"
-class="endDate">
-
-</td>
-
-<td>
-
-<input
-type="time"
-class="endTime">
-
-</td>
-
-<td>
-
-<input
-type="text"
-class="recordHours"
-readonly
-placeholder="تحسب تلقائياً">
-
-</td>
-
-<td>
-
-<input
 type="file"
-class="photoInput"
-accept="image/*">
+
+accept="image/*"
+
+capture="environment"
+
+multiple
+
+class="photo">
 
 </td>
 
 <td>
 
 <textarea
-class="notes"
-placeholder="اكتب الملاحظات"></textarea>
+
+class="notes"></textarea>
 
 </td>
 
 `;
 
-        sitesBody.appendChild(row);
+sitesBody.appendChild(tr);
 
-    });
+});
 
-    activateTable();
+activateRows();
 
-}//==================================================
-// تشغيل الجدول
-//==================================================
+}//======================================
+// تشغيل صفوف الجدول
+//======================================
 
-function activateTable() {
+function activateRows(){
 
-    const rows = document.querySelectorAll("#sitesBody tr");
+const rows=document.querySelectorAll("#sitesBody tr");
 
-    rows.forEach(function (row) {
+rows.forEach(row=>{
 
-        const status = row.querySelector(".statusSelect");
+const xml=row.querySelector(".xml");
+const status=row.querySelector(".status");
 
-        const startDate = row.querySelector(".startDate");
-        const startTime = row.querySelector(".startTime");
+const startDate=row.querySelector(".startDate");
+const startTime=row.querySelector(".startTime");
 
-        const endDate = row.querySelector(".endDate");
-        const endTime = row.querySelector(".endTime");
+const endDate=row.querySelector(".endDate");
+const endTime=row.querySelector(".endTime");
 
-        const hours = row.querySelector(".recordHours");
+const duration=row.querySelector(".duration");
 
-        // تعبئة التاريخ تلقائياً
+const notes=row.querySelector(".notes");
 
-        startDate.addEventListener("focus", function () {
 
-            if (startDate.value === "") {
 
-                startDate.value = getToday();
+//========================
+// بداية الرصد
+//========================
 
-            }
+startDate.addEventListener("focus",()=>{
 
-        });
+if(startDate.value===""){
 
-        endDate.addEventListener("focus", function () {
+startDate.value=today();
 
-            if (endDate.value === "") {
+}
 
-                endDate.value = getToday();
+});
 
-            }
+startTime.addEventListener("focus",()=>{
 
-        });
+if(startTime.value===""){
 
-        // تعبئة الوقت تلقائياً
+startTime.value=currentTime();
 
-        startTime.addEventListener("focus", function () {
+}
 
-            if (startTime.value === "") {
+});
 
-                startTime.value = getTimeNow();
 
-            }
 
-        });
+//========================
+// نهاية الرصد
+//========================
 
-        endTime.addEventListener("focus", function () {
+endDate.addEventListener("focus",()=>{
 
-            if (endTime.value === "") {
+if(endDate.value===""){
 
-                endTime.value = getTimeNow();
+endDate.value=today();
 
-            }
+}
 
-        });
+});
 
-        // حساب مدة الرصد
+endTime.addEventListener("focus",()=>{
 
-        startDate.addEventListener("change", function () {
+if(endTime.value===""){
 
-            calculateRecordHours(row);
+endTime.value=currentTime();
 
-        });
+}
 
-        startTime.addEventListener("change", function () {
+});
 
-            calculateRecordHours(row);
 
-        });
 
-        endDate.addEventListener("change", function () {
+//========================
+// حساب المدة
+//========================
 
-            calculateRecordHours(row);
+[startDate,startTime,endDate,endTime]
 
-        });
+.forEach(item=>{
 
-        endTime.addEventListener("change", function () {
+item.addEventListener("change",()=>{
 
-            calculateRecordHours(row);
+calculateDuration(row);
 
-        });
+saveMission();
 
-        // تغيير لون الصف
+});
 
-        status.addEventListener("change", function () {
+});
 
-            row.classList.remove(
-                "status-working",
-                "status-warning",
-                "status-brown",
-                "status-danger"
-            );
 
-            switch (status.value) {
 
-                case "working":
-                    row.classList.add("status-working");
-                    break;
+//========================
+// XML
+//========================
 
-                case "workingClean":
-                    row.classList.add("status-warning");
-                    break;
+xml.addEventListener("change",()=>{
 
-                case "brokenViolation":
-                    row.classList.add("status-brown");
-                    break;
+saveMission();
 
-                case "broken":
-                    row.classList.add("status-danger");
-                    break;
+});
 
-            }
 
-            updateProgress();
 
-            autoSave();
+//========================
+// الملاحظات
+//========================
 
-        });
+notes.addEventListener("input",()=>{
 
-    });
+saveMission();
 
-}//==================================================
+});
+
+
+
+//========================
+// حالة الموقع
+//========================
+
+status.addEventListener("change",()=>{
+
+row.classList.remove(
+
+"status-working",
+
+"status-warning",
+
+"status-brown",
+
+"status-danger"
+
+);
+
+switch(status.value){
+
+case"working":
+
+row.classList.add("status-working");
+
+break;
+
+case"workingClean":
+
+row.classList.add("status-warning");
+
+break;
+
+case"brokenViolation":
+
+row.classList.add("status-brown");
+
+break;
+
+case"broken":
+
+row.classList.add("status-danger");
+
+break;
+
+}
+
+updateProgress();
+
+saveMission();
+
+});
+
+});
+
+}
+
+
+
+//======================================
 // تاريخ اليوم
-//==================================================
+//======================================
 
-function getToday() {
+function today(){
 
-    const now = new Date();
+const d=new Date();
 
-    const year = now.getFullYear();
-
-    const month = String(now.getMonth() + 1).padStart(2, "0");
-
-    const day = String(now.getDate()).padStart(2, "0");
-
-    return `${year}-${month}-${day}`;
+return d.toISOString().split("T")[0];
 
 }
 
 
 
-//==================================================
+//======================================
 // الوقت الحالي
-//==================================================
+//======================================
 
-function getTimeNow() {
+function currentTime(){
 
-    const now = new Date();
+const d=new Date();
 
-    const hour = String(now.getHours()).padStart(2, "0");
+return d.toTimeString().substring(0,5);
 
-    const minute = String(now.getMinutes()).padStart(2, "0");
-
-    return `${hour}:${minute}`;
-
-}
-
-
-
-//==================================================
+}//======================================
 // حساب مدة الرصد
-//==================================================
+//======================================
 
-function calculateRecordHours(row) {
+function calculateDuration(row){
 
-    const startDate = row.querySelector(".startDate").value;
+const startDate=row.querySelector(".startDate").value;
+const startTime=row.querySelector(".startTime").value;
 
-    const startTime = row.querySelector(".startTime").value;
+const endDate=row.querySelector(".endDate").value;
+const endTime=row.querySelector(".endTime").value;
 
-    const endDate = row.querySelector(".endDate").value;
+const duration=row.querySelector(".duration");
 
-    const endTime = row.querySelector(".endTime").value;
+if(
+startDate===""||
+startTime===""||
+endDate===""||
+endTime===""
+){
 
-    const result = row.querySelector(".recordHours");
+duration.value="";
 
-    if (
-        startDate === "" ||
-        startTime === "" ||
-        endDate === "" ||
-        endTime === ""
-    ) {
+return;
 
-        result.value = "";
+}
 
-        return;
+const start=new Date(startDate+"T"+startTime);
 
-    }
+const end=new Date(endDate+"T"+endTime);
 
-    const start = new Date(startDate + "T" + startTime);
+const diff=end-start;
 
-    const end = new Date(endDate + "T" + endTime);
+if(diff<0){
 
-    const diff = end - start;
+duration.value="";
 
-    if (diff <= 0) {
+return;
 
-        result.value = "";
+}
 
-        return;
+const totalMinutes=Math.floor(diff/60000);
 
-    }
+const hours=Math.floor(totalMinutes/60);
 
-    const totalMinutes = Math.floor(diff / 60000);
+const minutes=totalMinutes%60;
 
-    const hours = Math.floor(totalMinutes / 60);
+duration.value=
 
-    const minutes = totalMinutes % 60;
+hours+" ساعة "+minutes+" دقيقة";
 
-    result.value = hours + " ساعة " + minutes + " دقيقة";
-
-    autoSave();
-
-}//==================================================
-// تحديث نسبة الإنجاز
-//==================================================
-
-function updateProgress() {
-
-    const statusList =
-    document.querySelectorAll(".statusSelect");
-
-    let completed = 0;
-
-    statusList.forEach(function (item) {
-
-        if (item.value !== "") {
-
-            completed++;
-
-        }
-
-    });
-
-    completedSites.textContent = completed;
-
-    totalSites.textContent = statusList.length;
-
-    let percent = 0;
-
-    if (statusList.length > 0) {
-
-        percent = Math.round(
-            (completed / statusList.length) * 100
-        );
-
-    }
-
-    progressFill.style.width = percent + "%";
+saveMission();
 
 }
 
 
 
-//==================================================
-// حساب ساعات المهمة
-//==================================================
+//======================================
+// تحديث مؤشر الإنجاز
+//======================================
 
-function calculateMissionHours() {
+function updateProgress(){
 
-    if (missionStartInput.value === "") {
+const list=document.querySelectorAll(".status");
 
-        return;
+let completed=0;
 
-    }
+list.forEach(item=>{
 
-    const now = new Date();
+if(item.value!==""){
 
-    missionEndInput.value = formatDateTime(now);
+completed++;
 
-    const start = new Date(
-        missionStartInput.value.replace(
-            /(\d{2})\/(\d{2})\/(\d{4})/,
-            "$3-$2-$1"
-        )
-    );
+}
 
-    const diff = now - start;
+});
 
-    if (diff <= 0) {
+completedSites.textContent=completed;
 
-        workHoursInput.value = "";
+completedCounter.textContent=completed;
 
-        return;
+remainingCounter.textContent=
 
-    }
+list.length-completed;
 
-    const totalMinutes = Math.floor(diff / 60000);
+totalSites.textContent=list.length;
 
-    const hours = Math.floor(totalMinutes / 60);
+const percent=
 
-    const minutes = totalMinutes % 60;
+list.length===0
 
-    workHoursInput.value =
-        hours + " ساعة " +
-        minutes + " دقيقة";
+?0
 
-}//==================================================
-// الحفظ التلقائي
-//==================================================
+:Math.round((completed/list.length)*100);
 
-function autoSave() {
+progressPercent.textContent=
 
-    const data = {
+percent+"%";
 
-        plan: planNumber,
+const radius=70;
 
-        route: routeInput.value,
+const circumference=
 
-        operator: operatorInput.value,
+2*Math.PI*radius;
 
-        employee: employeeInput.value,
+progressCircle.style.strokeDasharray=
 
-        car: carInput.value,
+circumference;
 
-        laptop: laptopInput.value,
+progressCircle.style.strokeDashoffset=
 
-        flash: flashInput.value,
+circumference-
 
-        hdd: hddInput.value,
+(percent/100)*circumference;
 
-        missionStart: missionStartInput.value,
+}//======================================
+// عداد المهمة المباشر
+//======================================
 
-        missionEnd: missionEndInput.value,
+let timer=null;
 
-        workHours: workHoursInput.value,
+function startMissionTimer(){
 
-        rows: []
+if(timer){
 
-    };
+clearInterval(timer);
 
-    document.querySelectorAll("#sitesBody tr").forEach(function (row) {
+}
 
-        data.rows.push({
+timer=setInterval(()=>{
 
-            status: row.querySelector(".statusSelect").value,
+if(missionStart.value==="") return;
 
-            startDate: row.querySelector(".startDate").value,
+const start=parseMissionDate(
 
-            startTime: row.querySelector(".startTime").value,
+missionStart.value
 
-            endDate: row.querySelector(".endDate").value,
+);
 
-            endTime: row.querySelector(".endTime").value,
+const now=new Date();
 
-            duration: row.querySelector(".recordHours").value,
+const diff=now-start;
 
-            notes: row.querySelector(".notes").value
+const totalSeconds=
 
-        });
+Math.floor(diff/1000);
 
-    });
+const hours=
 
-    localStorage.setItem(
+Math.floor(totalSeconds/3600);
 
-        "mission_" + planNumber,
+const minutes=
 
-        JSON.stringify(data)
+Math.floor((totalSeconds%3600)/60);
 
-    );
+const seconds=
+
+totalSeconds%60;
+
+liveTimer.textContent=
+
+String(hours).padStart(2,"0")+":"+
+
+String(minutes).padStart(2,"0")+":"+
+
+String(seconds).padStart(2,"0");
+
+},1000);
 
 }
 
 
 
-//==================================================
-// استعادة المهمة
-//==================================================
+//======================================
+// تحويل التاريخ
+//======================================
 
-function restoreMission() {
+function parseMissionDate(value){
 
-    const saved = localStorage.getItem(
+const p=value.split(" ");
 
-        "mission_" + planNumber
+const d=p[0].split("/");
 
-    );
+const t=p[1].split(":");
 
-    if (!saved) {
+return new Date(
 
-        return;
+d[2],
 
-    }
+d[1]-1,
 
-    const data = JSON.parse(saved);
+d[0],
 
-    operatorInput.value = data.operator || "";
+t[0],
 
-    employeeInput.value = data.employee || "";
+t[1]
 
-    carInput.value = data.car || "";
+);
 
-    laptopInput.value = data.laptop || "";
+}//======================================
+// حفظ المهمة
+//======================================
 
-    flashInput.value = data.flash || "";
+function saveMission(){
 
-    hddInput.value = data.hdd || "";
+const data={
 
-    missionStartInput.value = data.missionStart || "";
+operator:operatorName.value,
+employee:employeeId.value,
+car:carNumber.value,
+laptop:laptopNumber.value,
+flash:flashCount.value,
+hdd:hddCount.value,
+supervisor:supervisor.value,
 
-    missionEndInput.value = data.missionEnd || "";
+missionStart:missionStart.value,
+missionEnd:missionEnd.value,
+workHours:workHours.value,
 
-    workHoursInput.value = data.workHours || "";
+generalNotes:generalNotes.value,
 
-    const rows = document.querySelectorAll("#sitesBody tr");
+rows:[]
 
-    rows.forEach(function (row, index) {
+};
 
-        if (!data.rows[index]) return;
+document.querySelectorAll("#sitesBody tr").forEach(row=>{
 
-        row.querySelector(".statusSelect").value =
-        data.rows[index].status;
+data.rows.push({
 
-        row.querySelector(".startDate").value =
-        data.rows[index].startDate;
+xml:row.querySelector(".xml").value,
 
-        row.querySelector(".startTime").value =
-        data.rows[index].startTime;
+status:row.querySelector(".status").value,
 
-        row.querySelector(".endDate").value =
-        data.rows[index].endDate;
+startDate:row.querySelector(".startDate").value,
 
-        row.querySelector(".endTime").value =
-        data.rows[index].endTime;
+startTime:row.querySelector(".startTime").value,
 
-        row.querySelector(".recordHours").value =
-        data.rows[index].duration;
+endDate:row.querySelector(".endDate").value,
 
-        row.querySelector(".notes").value =
-        data.rows[index].notes;
+endTime:row.querySelector(".endTime").value,
 
-    });
+duration:row.querySelector(".duration").value,
 
-    updateProgress();
+notes:row.querySelector(".notes").value
 
-}//==================================================
+});
+
+});
+
+localStorage.setItem(
+
+"mission_"+planId,
+
+JSON.stringify(data)
+
+);
+
+}
+
+
+
+//======================================
+// استرجاع المهمة
+//======================================
+
+function restoreMission(){
+
+const saved=
+
+localStorage.getItem(
+
+"mission_"+planId
+
+);
+
+if(!saved){
+
+return;
+
+}
+
+const data=
+
+JSON.parse(saved);
+
+operatorName.value=data.operator||"";
+employeeId.value=data.employee||"";
+carNumber.value=data.car||"";
+laptopNumber.value=data.laptop||"";
+flashCount.value=data.flash||"";
+hddCount.value=data.hdd||"";
+supervisor.value=data.supervisor||"";
+
+missionStart.value=data.missionStart||"";
+missionEnd.value=data.missionEnd||"";
+workHours.value=data.workHours||"";
+
+generalNotes.value=data.generalNotes||"";
+
+const rows=document.querySelectorAll("#sitesBody tr");
+
+rows.forEach((row,index)=>{
+
+if(!data.rows[index]) return;
+
+row.querySelector(".xml").value=data.rows[index].xml;
+
+row.querySelector(".status").value=data.rows[index].status;
+
+row.querySelector(".startDate").value=data.rows[index].startDate;
+
+row.querySelector(".startTime").value=data.rows[index].startTime;
+
+row.querySelector(".endDate").value=data.rows[index].endDate;
+
+row.querySelector(".endTime").value=data.rows[index].endTime;
+
+row.querySelector(".duration").value=data.rows[index].duration;
+
+row.querySelector(".notes").value=data.rows[index].notes;
+
+});
+
+updateProgress();
+
+}//======================================
 // إنهاء المهمة
-//==================================================
+//======================================
 
-function finishMission() {
+function finishMission(){
 
-    calculateMissionHours();
+const now=new Date();
 
-    autoSave();
+missionEnd.value=formatDate(now);
 
-    alert("تم إنهاء المهمة بنجاح.");
+const start=parseMissionDate(missionStart.value);
+
+const diff=now-start;
+
+const totalMinutes=Math.floor(diff/60000);
+
+const hours=Math.floor(totalMinutes/60);
+
+const minutes=totalMinutes%60;
+
+workHours.value=
+
+hours+" ساعة "+minutes+" دقيقة";
+
+saveMission();
+
+alert("تم إنهاء المهمة بنجاح");
 
 }
 
 
 
-//==================================================
-// ربط الأزرار
-//==================================================
-
-document.getElementById("finishBtn").addEventListener("click", finishMission);
-
-
-
-document.getElementById("saveBtn").addEventListener("click", function () {
-
-    autoSave();
-
-    alert("تم حفظ المهمة.");
-
-});
-
-
-
-document.getElementById("printBtn").addEventListener("click", function () {
-
-    window.print();
-
-});
-
-
-
-document.getElementById("copyLinkBtn").addEventListener("click", function () {
-
-    navigator.clipboard.writeText(window.location.href);
-
-    alert("تم نسخ رابط المهمة.");
-
-});
-
-
-
-document.getElementById("shareBtn").addEventListener("click", async function () {
-
-    if (navigator.share) {
-
-        await navigator.share({
-
-            title: "المهمة الميدانية",
-
-            text: "مشاركة المهمة",
-
-            url: window.location.href
-
-        });
-
-    } else {
-
-        alert("المشاركة غير مدعومة.");
-
-    }
-
-});
-
-
-
-document.getElementById("pdfBtn").addEventListener("click", function () {
-
-    exportPDF();
-
-});
-
-
-
-document.getElementById("excelBtn").addEventListener("click", function () {
-
-    exportExcel();
-
-});
-
-
-
-//==================================================
-// حفظ تلقائي كل 30 ثانية
-//==================================================
+//======================================
+// حفظ تلقائي
+//======================================
 
 setInterval(function(){
 
-    autoSave();
+saveMission();
 
 },30000);
 
 
 
-//==================================================
-// حفظ قبل إغلاق الصفحة
-//==================================================
+//======================================
+// قبل إغلاق الصفحة
+//======================================
 
 window.addEventListener("beforeunload",function(){
 
-    autoSave();
+saveMission();
 
-});//==================================================
-// إعادة تفعيل الصفوف بعد الاستعادة
-//==================================================
+});
 
-function refreshTable() {
 
-    document.querySelectorAll("#sitesBody tr").forEach(function (row) {
 
-        const status = row.querySelector(".statusSelect");
+//======================================
+// ربط الأزرار
+//======================================
 
-        row.classList.remove(
-            "status-working",
-            "status-warning",
-            "status-brown",
-            "status-danger"
-        );
+document.getElementById("saveBtn").onclick=function(){
 
-        switch (status.value) {
+saveMission();
 
-            case "working":
-                row.classList.add("status-working");
-                break;
+alert("تم الحفظ");
 
-            case "workingClean":
-                row.classList.add("status-warning");
-                break;
+};
 
-            case "brokenViolation":
-                row.classList.add("status-brown");
-                break;
+document.getElementById("finishBtn").onclick=finishMission;
 
-            case "broken":
-                row.classList.add("status-danger");
-                break;
+document.getElementById("printBtn").onclick=function(){
 
-        }
+window.print();
 
-    });
+};
 
-    updateProgress();
+document.getElementById("copyLinkBtn").onclick=function(){
+
+navigator.clipboard.writeText(window.location.href);
+
+alert("تم نسخ الرابط");
+
+};
+
+document.getElementById("shareBtn").onclick=async function(){
+
+if(navigator.share){
+
+await navigator.share({
+
+title:"المهمة الميدانية",
+
+text:"خطة رقم "+planId,
+
+url:window.location.href
+
+});
+
+}else{
+
+alert("المشاركة غير مدعومة");
 
 }
 
+};
 
+document.getElementById("pdfBtn").onclick=function(){
 
-//==================================================
-// حفظ الصورة (المرحلة الأولى)
-//==================================================
+if(typeof exportPDF==="function"){
 
-document.querySelectorAll(".photoInput").forEach(function(input){
+exportPDF();
 
-    input.addEventListener("change",function(){
+}else{
 
-        autoSave();
+alert("ميزة PDF ستفعل بعد إنشاء export.js");
 
-    });
+}
 
-});
+};
 
+document.getElementById("excelBtn").onclick=function(){
 
+if(typeof exportExcel==="function"){
 
-//==================================================
-// حفظ عند تعديل أي حقل
-//==================================================
+exportExcel();
 
-document.addEventListener("input",function(){
+}else{
 
-    autoSave();
+alert("ميزة Excel ستفعل بعد إنشاء export.js");
 
-});
+}
 
-document.addEventListener("change",function(){
-
-    autoSave();
-
-});
-
-
-
-//==================================================
-// استعادة ألوان الجدول
-//==================================================
-
-setTimeout(function(){
-
-    refreshTable();
-
-},200);
-
-
-
-//==================================================
-// تحديث ساعات المهمة كل دقيقة
-//==================================================
-
-setInterval(function(){
-
-    calculateMissionHours();
-
-},60000);
-
-
-
-//==================================================
-// نهاية mission.js
-//==================================================
+};
