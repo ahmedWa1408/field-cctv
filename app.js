@@ -4,7 +4,12 @@ document.addEventListener("DOMContentLoaded", function () {
     const welcome = document.getElementById("welcomeScreen");
     const home = document.getElementById("homePage");
 
+    const searchCard = document.getElementById("searchCard");
+    const routeCard = document.getElementById("routeCard");
+    const actionButtons = document.getElementById("actionButtons");
+
     const searchBtn = document.getElementById("searchBtn");
+    const backBtn = document.getElementById("backBtn");
     const missionBtn = document.getElementById("missionBtn");
     const historyBtn = document.getElementById("historyBtn");
 
@@ -23,45 +28,73 @@ document.addEventListener("DOMContentLoaded", function () {
             welcome.classList.add("hidden");
             home.classList.remove("hidden");
 
-        }, 3000);
+        },3000);
 
-    }, 2000);
+    },2000);
 
-    // البحث
-    searchBtn.addEventListener("click", function () {
 
-        const number = planNumber.value.trim();
+    // البحث عن الخطة
 
-        if (!number) {
+    searchBtn.onclick = function(){
+
+        let number = planNumber.value.trim();
+
+        if(number===""){
+
             alert("أدخل رقم الخطة");
             return;
+
         }
 
-        if (plans[number]) {
+        if(plans[number]){
 
             routeName.value = plans[number].route;
 
-            historyBtn.classList.remove("hidden");
-            missionBtn.classList.remove("hidden");
+            searchCard.classList.add("hidden");
 
-        } else {
+            routeCard.classList.remove("hidden");
+
+            actionButtons.classList.remove("hidden");
+
+        }else{
 
             alert("رقم الخطة غير موجود");
 
-            routeName.value = "";
-
-            historyBtn.classList.add("hidden");
-            missionBtn.classList.add("hidden");
         }
 
-    });
+    };
 
-    missionBtn.addEventListener("click", function () {
-        alert("صفحة المهمة سيتم إنشاؤها في الخطوة التالية.");
-    });
 
-    historyBtn.addEventListener("click", function () {
-        alert("صفحة السجل سيتم إنشاؤها في الخطوة التالية.");
-    });
+    // الرجوع
+
+    backBtn.onclick = function(){
+
+        searchCard.classList.remove("hidden");
+
+        routeCard.classList.add("hidden");
+
+        actionButtons.classList.add("hidden");
+
+        planNumber.focus();
+
+    };
+
+
+    // بدء المهمة
+
+    missionBtn.onclick = function(){
+
+        alert("سيتم فتح صفحة المهمة في الخطوة القادمة.");
+
+    };
+
+
+    // السجل
+
+    historyBtn.onclick = function(){
+
+        alert("سيتم فتح سجل العمليات السابقة.");
+
+    };
 
 });
