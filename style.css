@@ -592,4 +592,18 @@ width:100%;
 
 }
 
+}.hidden{
+display:none !important;
+}
+
+.splash{
+display:flex;
+}
+
+.welcome{
+display:flex;
+}
+
+#homePage{
+display:block;
 }
