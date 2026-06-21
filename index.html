@@ -4,6 +4,7 @@
 <head>
 
 <meta charset="UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>الحركة الميدانية | قسم التشغيل CCTV</title>
@@ -18,32 +19,39 @@
 
 <div id="splashScreen" class="splash">
 
-    
+<img src="IMG_3707.jpeg" class="logo" alt="Tahakom">
+
+</div>
+
 <!-- شاشة الترحيب -->
 
-<div id="welcomeScreen" class="welcome hidden"><img src="IMG_3707.jpeg" class="logo" alt="Tahakom">
+<div id="welcomeScreen" class="welcome hidden">
 
-    <div class="card">
+<div class="card">
 
-        <h1>الحركة الميدانية</h1>
+<h1>الحركة الميدانية</h1>
 
-        <h2>قسم التشغيل CCTV</h2>
+<h2>قسم التشغيل CCTV</h2>
 
-        <div class="line"></div>
+<div class="line"></div>
 
-        <p>
+<p>
 
-            نسأل الله لكم التوفيق والسلامة
-            <br>
-            في أداء مهامكم الميدانية.
+نسأل الله لكم التوفيق والسلامة
 
-        </p>
+<br>
 
-        <button id="startBtn">
-            دخول النظام
-        </button>
+في أداء مهامكم الميدانية.
 
-    </div>
+</p>
+
+<button id="startBtn">
+
+دخول النظام
+
+</button>
+
+</div>
 
 </div>
 
@@ -57,27 +65,44 @@
 
 <div>
 
-<h1>الحركة الميدانية</h1>
+<h1>
 
-<p>قسم التشغيل CCTV</p>
+الحركة الميدانية
+
+</h1>
+
+<p>
+
+قسم التشغيل CCTV
+
+</p>
 
 </div>
 
 </div>
 
-</header>
+</header><section class="search-card">
 
-<section class="search-card">
+<h2>
 
-<h2>بيانات الخطة</h2>
+بيانات الخطة
 
-<label>رقم الخطة</label>
+</h2>
+
+<label>
+
+رقم الخطة
+
+</label>
 
 <div class="search-row">
 
 <input
+
 type="number"
+
 id="planNumber"
+
 placeholder="أدخل رقم الخطة">
 
 <button id="searchBtn">
@@ -88,23 +113,39 @@ placeholder="أدخل رقم الخطة">
 
 </div>
 
-<label>اسم المسار</label>
+<label>
+
+اسم المسار
+
+</label>
 
 <input
+
 type="text"
+
 id="routeName"
+
 readonly
-placeholder="سيظهر اسم المسار هنا">
+
+placeholder="سيظهر اسم المسار بعد البحث">
 
 <div class="buttons">
 
-<button id="historyBtn" style="display:none;">
+<button
+
+id="historyBtn"
+
+style="display:none;">
 
 📁 سجل العمليات السابقة
 
 </button>
 
-<button id="missionBtn" style="display:none;">
+<button
+
+id="missionBtn"
+
+style="display:none;">
 
 ▶ بدء المهمة
 
@@ -117,14 +158,15 @@ placeholder="سيظهر اسم المسار هنا">
 <footer>
 
 إدارة أنظمة المراقبة الأمنية
+
 <br>
+
 قسم التشغيل CCTV
 
 </footer>
 
-</div>
+</div><script src="plans.js"></script>
 
-<script src="plans.js"></script>
 <script src="app.js"></script>
 
 </body>
