@@ -10,16 +10,15 @@ body{
     color:#333;
 }
 
-/* إخفاء العناصر */
 .hidden{
-    display:none;
+    display:none !important;
 }
 
 /* شاشة البداية */
 .splash{
     position:fixed;
     inset:0;
-    background:#ffffff;
+    background:#fff;
     display:flex;
     justify-content:center;
     align-items:center;
@@ -33,47 +32,50 @@ body{
 
 /* شاشة الترحيب */
 .welcome{
-    min-height:100vh;
+    position:fixed;
+    inset:0;
+    background:#eef1f4;
     display:flex;
     justify-content:center;
     align-items:center;
     padding:20px;
+    z-index:999;
 }
 
 .card{
     width:100%;
     max-width:430px;
     background:#fff;
-    border-radius:24px;
+    border-radius:28px;
     padding:35px 25px;
     text-align:center;
-    box-shadow:0 15px 35px rgba(0,0,0,.12);
+    box-shadow:0 15px 40px rgba(0,0,0,.12);
 }
 
 .card h1{
+    font-size:46px;
     color:#6d3fa9;
-    font-size:38px;
-    margin-bottom:15px;
+    margin-bottom:18px;
 }
 
 .card h2{
+    font-size:28px;
     color:#63c6c6;
-    margin-bottom:20px;
 }
 
 .line{
     width:170px;
     height:6px;
-    margin:20px auto;
+    margin:22px auto;
     border-radius:20px;
     background:linear-gradient(to left,#6d3fa9,#63c6c6);
 }
 
 .card p{
-    font-size:26px;
+    margin:30px 0;
+    font-size:25px;
     line-height:1.8;
     color:#555;
-    margin-bottom:35px;
 }
 
 .card button{
@@ -81,75 +83,31 @@ body{
     border:none;
     border-radius:18px;
     padding:22px;
-    font-size:32px;
+    font-size:34px;
     color:#fff;
     cursor:pointer;
     background:linear-gradient(to left,#6d3fa9,#63c6c6);
 }
 
 /* الصفحة الرئيسية */
+
+#homePage{
+    min-height:100vh;
+    background:#eef1f4;
+}
+
 header{
     background:linear-gradient(to left,#6d3fa9,#63c6c6);
     color:#fff;
     text-align:center;
-    padding:25px;
+    padding:30px 20px;
 }
 
-.search-card{
-    background:#fff;
-    width:95%;
-    max-width:500px;
-    margin:25px auto;
-    border-radius:20px;
-    padding:20px;
-    box-shadow:0 8px 20px rgba(0,0,0,.08);
+header h1{
+    font-size:40px;
 }
 
-.search-card h2{
-    text-align:center;
-    color:#6d3fa9;
-    margin-bottom:20px;
-}
-
-label{
-    display:block;
-    margin-bottom:8px;
-    font-weight:bold;
-}
-
-input{
-    width:100%;
-    padding:14px;
-    border:1px solid #ccc;
-    border-radius:12px;
-    margin-bottom:18px;
-    font-size:18px;
-}
-
-.search-row{
-    display:flex;
-    gap:10px;
-}
-
-.search-row button,
-.buttons button{
-    border:none;
-    border-radius:12px;
-    background:#6d3fa9;
-    color:#fff;
-    cursor:pointer;
-    padding:14px 18px;
-}
-
-.buttons{
-    display:flex;
-    flex-direction:column;
-    gap:12px;
-    margin-top:20px;
-}
-
-footer{
-    text-align:center;
-    color:#777;
-    padding:25px;
+header p{
+    margin-top:10px;
+    font-size:22px;
 }
