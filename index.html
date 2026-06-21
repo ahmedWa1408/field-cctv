@@ -1,1 +1,124 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
 
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>الحركة الميدانية | قسم التشغيل CCTV</title>
+
+<link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+<!-- شاشة البداية -->
+
+<div id="splashScreen" class="splash">
+
+    <img src="IMG_3707.jpeg" class="logo" alt="Tahakom">
+
+</div>
+
+<!-- شاشة الترحيب -->
+
+<div id="welcomeScreen" class="welcome hidden">
+
+    <div class="card">
+
+        <h1>الحركة الميدانية</h1>
+
+        <h2>قسم التشغيل CCTV</h2>
+
+        <div class="line"></div>
+
+        <p>
+
+            نسأل الله لكم التوفيق والسلامة
+            <br>
+            في أداء مهامكم الميدانية.
+
+        </p>
+
+        <button id="startBtn">
+
+            دخول النظام
+
+        </button>
+
+    </div>
+
+</div><!-- الصفحة الرئيسية -->
+
+<div id="homePage" class="hidden">
+
+<header>
+
+    <div class="title">
+
+        <h1>الحركة الميدانية</h1>
+
+        <p>قسم التشغيل CCTV</p>
+
+    </div>
+
+</header>
+
+<section class="search-card">
+
+    <h2>بيانات الخطة</h2>
+
+    <label for="planNumber">رقم الخطة</label>
+
+    <div class="search-row">
+
+        <input
+            type="number"
+            id="planNumber"
+            placeholder="أدخل رقم الخطة">
+
+        <button id="searchBtn">
+            بحث
+        </button>
+
+    </div>
+
+    <label for="routeName">اسم المسار</label>
+
+    <input
+        type="text"
+        id="routeName"
+        placeholder="سيظهر اسم المسار بعد البحث"
+        readonly>
+
+    <div class="buttons">
+
+        <button id="historyBtn" style="display:none;">
+            📁 سجل العمليات السابقة
+        </button>
+
+        <button id="missionBtn" style="display:none;">
+            ▶ بدء المهمة
+        </button>
+
+    </div>
+
+</section>
+
+<footer>
+
+إدارة أنظمة المراقبة الأمنية
+<br>
+قسم التشغيل CCTV
+
+</footer>
+
+</div><script src="plans.js"></script>
+
+<script src="app.js"></script>
+
+</body>
+
+</html>
