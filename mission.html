@@ -1,1 +1,277 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
 
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>المهمة الميدانية | CCTV</title>
+
+<link rel="stylesheet" href="mission.css">
+
+</head>
+
+<body>
+
+<header class="topHeader">
+
+<h1>الحركة الميدانية</h1>
+
+<p>قسم التشغيل CCTV</p>
+
+</header>
+
+<div class="container">
+
+<div class="card">
+
+<h2>بيانات المهمة</h2>
+
+<div class="grid">
+
+<div>
+
+<label>رقم الخطة</label>
+
+<input
+type="text"
+id="planNumber"
+readonly>
+
+</div>
+
+<div>
+
+<label>اسم المسار</label>
+
+<input
+type="text"
+id="routeName"
+readonly>
+
+</div>
+
+<div>
+
+<label>اسم المشغل</label>
+
+<input
+type="text"
+id="operatorName"
+placeholder="اسم المشغل">
+
+</div>
+
+<div>
+
+<label>رقم ID</label>
+
+<input
+type="text"
+id="employeeId"
+placeholder="رقم الموظف">
+
+</div>
+
+<div>
+
+<label>رقم السيارة</label>
+
+<input
+type="text"
+id="carNumber">
+
+</div>
+
+<div>
+
+<label>رقم اللابتوب</label>
+
+<input
+type="text"
+id="laptopNumber">
+
+</div>
+
+<div>
+
+<label>عدد الفلاشات</label>
+
+<input
+type="number"
+id="flashCount">
+
+</div>
+
+<div>
+
+<label>عدد الهاردسكات</label>
+
+<input
+type="number"
+id="hddCount">
+
+</div>
+
+</div>
+
+</div><div class="card">
+
+<h2>معلومات المهمة</h2>
+
+<div class="grid">
+
+<div>
+
+<label>بداية المهمة</label>
+
+<input
+type="text"
+id="missionStart"
+readonly>
+
+</div>
+
+<div>
+
+<label>نهاية المهمة</label>
+
+<input
+type="text"
+id="missionEnd"
+readonly>
+
+</div>
+
+<div>
+
+<label>إجمالي ساعات العمل</label>
+
+<input
+type="text"
+id="workHours"
+readonly>
+
+</div>
+
+</div>
+
+<div class="progressBox">
+
+<h3>نسبة الإنجاز</h3>
+
+<div class="progressBar">
+
+<div id="progressFill"></div>
+
+</div>
+
+<p>
+
+<span id="completedSites">0</span>
+
+/
+
+<span id="totalSites">0</span>
+
+موقع
+
+</p>
+
+</div>
+
+</div>
+
+<div class="card">
+
+<h2>المواقع</h2>
+
+<div class="tableWrapper">
+
+<table id="sitesTable">
+
+<thead>
+
+<tr>
+
+<th>#</th>
+
+<th>رمز الموقع</th>
+
+<th>نوع التخزين</th>
+
+<th>الموقع</th>
+
+<th>XML</th>
+
+<th>بداية الرصد</th>
+
+<th>نهاية الرصد</th>
+
+<th>مدة الرصد</th>
+
+<th>الصور</th>
+
+<th>الملاحظات</th>
+
+<th>الحالة</th>
+
+</tr>
+
+</thead>
+
+<tbody id="sitesBody">
+
+</tbody>
+
+</table>
+
+</div>
+
+</div><div class="card">
+
+<h2>الإجراءات</h2>
+
+<div class="actions">
+
+<button id="saveBtn">
+💾 حفظ
+</button>
+
+<button id="pdfBtn">
+📄 PDF
+</button>
+
+<button id="excelBtn">
+📊 Excel
+</button>
+
+<button id="printBtn">
+🖨️ طباعة
+</button>
+
+<button id="copyLinkBtn">
+🔗 نسخ رابط الخطة
+</button>
+
+<button id="shareBtn">
+📤 مشاركة الخطة
+</button>
+
+<button id="finishBtn" class="finish">
+✅ إنهاء المهمة
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+<script src="plans.js"></script>
+<script src="mission.js"></script>
+
+</body>
+
+</html>
