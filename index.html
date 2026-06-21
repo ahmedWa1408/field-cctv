@@ -2,6 +2,7 @@
 <html lang="ar" dir="rtl">
 
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -13,11 +14,45 @@
 
 <body>
 
-<div class="page">
+<!-- شاشة البداية -->
 
-<header class="header">
+<div id="splashScreen" class="splash">
 
-<img src="IMG_3707.jpeg" class="logo">
+    <img src="IMG_3707.jpeg" class="logo" alt="Tahakom">
+
+</div>
+
+<!-- شاشة الترحيب -->
+
+<div id="welcomeScreen" class="welcome hidden">
+
+    <div class="welcome-card">
+
+        <h1>الحركة الميدانية</h1>
+
+        <h2>قسم التشغيل CCTV</h2>
+
+        <div class="line"></div>
+
+        <p>
+
+            نسأل الله لكم التوفيق والسلامة
+
+            <br>
+
+            في أداء مهامكم الميدانية.
+
+        </p>
+
+    </div>
+
+</div>
+
+<!-- الصفحة الرئيسية -->
+
+<div id="homePage" class="hidden">
+
+<header>
 
 <h1>الحركة الميدانية</h1>
 
@@ -25,13 +60,13 @@
 
 </header>
 
-<div class="card">
+<section class="search-card">
 
 <h2>بيانات الخطة</h2>
 
 <label>رقم الخطة</label>
 
-<div class="searchBox">
+<div class="search-row">
 
 <input
 type="number"
@@ -39,42 +74,53 @@ id="planNumber"
 placeholder="أدخل رقم الخطة">
 
 <button id="searchBtn">
+
 بحث
+
 </button>
 
-</div>
-
-<label>اسم المسار</label>
+</div><label>اسم المسار</label>
 
 <input
 type="text"
 id="routeName"
 readonly
-placeholder="سيظهر اسم المسار">
+placeholder="سيظهر اسم المسار بعد البحث">
 
-<button id="missionBtn">
-بدء المهمة
+<div class="buttons">
+
+<button
+id="historyBtn"
+class="hidden">
+
+📁 سجل العمليات السابقة
+
 </button>
 
-<button id="historyBtn">
-سجل العمليات السابقة
+<button
+id="missionBtn"
+class="hidden">
+
+▶ بدء المهمة
+
 </button>
 
 </div>
+
+</section>
 
 <footer>
 
-إدارة أنظمة المراقبة الأمنية<br>
+إدارة أنظمة المراقبة الأمنية
+
+<br>
 
 قسم التشغيل CCTV
 
-</footer>
-
-</div>
+</footer></div>
 
 <script src="plans.js"></script>
 <script src="app.js"></script>
 
 </body>
-
 </html>
