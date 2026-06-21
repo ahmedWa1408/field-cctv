@@ -1,149 +1,206 @@
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded",function(){
 
-    const splash = document.getElementById("splashScreen");
-    const welcome = document.getElementById("welcomeScreen");
-    const home = document.getElementById("homePage");
+//======================================
+// عناصر الصفحة
+//======================================
 
-    const searchCard = document.getElementById("searchCard");
-    const routeCard = document.getElementById("routeCard");
-    const actionButtons = document.getElementById("actionButtons");
+const splashScreen =
+document.getElementById("splashScreen");
 
-    const searchBtn = document.getElementById("searchBtn");
-    const backBtn = document.getElementById("backBtn");
-    const missionBtn = document.getElementById("missionBtn");
-    const historyBtn = document.getElementById("historyBtn");
+const welcomeScreen =
+document.getElementById("welcomeScreen");
 
-    const planNumber = document.getElementById("planNumber");
-    const routeName = document.getElementById("routeName");
+const homePage =
+document.getElementById("homePage");
 
-    // شاشة البداية
+const startSystemBtn =
+document.getElementById("startSystemBtn");
 
-    setTimeout(function(){
+const searchCard =
+document.getElementById("searchCard");
 
-        splash.classList.add("hidden");
+const routeCard =
+document.getElementById("routeCard");
 
-        welcome.classList.remove("hidden");
+const actionButtons =
+document.getElementById("actionButtons");
 
-        setTimeout(function(){
+const searchBtn =
+document.getElementById("searchBtn");
 
-            welcome.classList.add("hidden");
+const backBtn =
+document.getElementById("backBtn");
 
-            home.classList.remove("hidden");
+const missionBtn =
+document.getElementById("missionBtn");
 
-        },3000);
+const historyBtn =
+document.getElementById("historyBtn");
 
-    },2000);    //========================================
-    // البحث عن الخطة
-    //========================================
+const adminBtn =
+document.getElementById("adminBtn");
 
-    searchBtn.onclick = function () {
+const settingsBtn =
+document.getElementById("settingsBtn");
 
-        const number = planNumber.value.trim();
+const planNumber =
+document.getElementById("planNumber");
 
-        if (number === "") {
+const routeName =
+document.getElementById("routeName");//======================================
+// شاشة البداية
+//======================================
 
-            alert("أدخل رقم الخطة أولاً");
+setTimeout(function(){
 
-            planNumber.focus();
+splashScreen.classList.add("hidden");
 
-            return;
+welcomeScreen.classList.remove("hidden");
 
-        }
+},2000);
 
-        if (!plans[number]) {
 
-            alert("رقم الخطة غير موجود");
 
-            planNumber.focus();
+//======================================
+// دخول النظام
+//======================================
 
-            return;
+startSystemBtn.onclick=function(){
 
-        }
+welcomeScreen.classList.add("hidden");
 
-        routeName.value = plans[number].route;
+homePage.classList.remove("hidden");
 
-        searchCard.classList.add("hidden");
+planNumber.focus();
 
-        routeCard.classList.remove("hidden");
+};//======================================
+// البحث عن الخطة
+//======================================
 
-        actionButtons.classList.remove("hidden");
+searchBtn.onclick=function(){
 
-    };
+const number=
+planNumber.value.trim();
 
+if(number===""){
 
+alert("أدخل رقم الخطة");
 
-    //========================================
-    // الرجوع
-    //========================================
+planNumber.focus();
 
-    backBtn.onclick = function () {
+return;
 
-        routeCard.classList.add("hidden");
+}
 
-        actionButtons.classList.add("hidden");
+if(!plans[number]){
 
-        searchCard.classList.remove("hidden");
+alert("رقم الخطة غير موجود");
 
-        routeName.value = "";
+return;
 
-        planNumber.focus();
+}
 
-    };    //========================================
-    // بدء المهمة
-    //========================================
+routeName.value=
+plans[number].route;
 
-    missionBtn.onclick = function () {
+searchCard.classList.add("hidden");
 
-        const number = planNumber.value.trim();
+routeCard.classList.remove("hidden");
 
-        if (number === "") {
+actionButtons.classList.remove("hidden");
 
-            alert("أدخل رقم الخطة أولاً");
+};//======================================
+// الرجوع
+//======================================
 
-            return;
+backBtn.onclick=function(){
 
-        }
+routeCard.classList.add("hidden");
 
-        if (!plans[number]) {
+actionButtons.classList.add("hidden");
 
-            alert("رقم الخطة غير موجود");
+searchCard.classList.remove("hidden");
 
-            return;
+routeName.value="";
 
-        }
+planNumber.focus();
 
-        window.location.href =
-        "mission.html?plan=" +
-        encodeURIComponent(number);
+};//======================================
+// بدء المهمة
+//======================================
 
-    };
+missionBtn.onclick=function(){
 
+window.location.href=
 
+"mission.html?plan="+
 
-    //========================================
-    // سجل العمليات
-    //========================================
+planNumber.value;
 
-    historyBtn.onclick = function () {
+};
 
-        window.location.href = "history.html";
 
-    };
 
+//======================================
+// السجل
+//======================================
 
+historyBtn.onclick=function(){
 
-    //========================================
-    // البحث عند الضغط على Enter
-    //========================================
+window.location.href=
 
-    planNumber.addEventListener("keydown", function (e) {
+"history.html";
 
-        if (e.key === "Enter") {
+};
 
-            searchBtn.click();
 
-        }
 
-    });
+//======================================
+// الإدارة
+//======================================
+
+adminBtn.onclick=function(){
+
+window.location.href=
+
+"admin.html";
+
+};
+
+
+
+//======================================
+// الإعدادات
+//======================================
+
+settingsBtn.onclick=function(){
+
+window.location.href=
+
+"settings.html";
+
+};
+
+
+
+//======================================
+// Enter
+//======================================
+
+planNumber.addEventListener(
+
+"keydown",
+
+function(e){
+
+if(e.key==="Enter"){
+
+searchBtn.click();
+
+}
+
+}
+
+);
 
 });
