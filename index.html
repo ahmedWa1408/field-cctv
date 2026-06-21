@@ -1,203 +1,76 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
-
 <head>
-
-<meta charset="UTF-8">
-
-<meta name="viewport"
-content="width=device-width,initial-scale=1.0">
-
-<title>الحركة الميدانية CCTV</title>
-
-<link rel="stylesheet" href="style.css">
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة التحكم الميدانية - CCTV</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- استدعاء خطوط FontAwesome للأيقونات لتبدو تماماً كالصورة المرفقة -->
+    <link rel="stylesheet" href="https://cloudflare.com">
 </head>
-
 <body>
 
-<!-- شاشة الشعار -->
-
-<div id="splashScreen" class="splash">
-
-<img
-src="assets/logo.png"
-class="logo"
-alt="Logo">
-
-<h2>إدارة أنظمة المراقبة الأمنية</h2>
-
-<p>قسم التشغيل CCTV</p>
-
-</div>
-
-
-
-<!-- شاشة الترحيب -->
-
-<div id="welcomeScreen" class="welcome hidden">
-
-<div class="welcomeCard">
-
-<h1>
-
-الحركة الميدانية
-
-</h1>
-
-<p>
-
-نسأل الله لكم التوفيق والسلامة
-في أداء مهامكم الميدانية.
-
-</p>
-
-<button id="startSystemBtn">
-
-دخول النظام
-
-</button>
-
-</div>
-
-</div>
-
-
-
-<!-- الصفحة الرئيسية -->
-
-<div id="homePage" class="hidden">
-
-<header class="mainHeader">
-
-<div>
-
-<h1>
-
-الحركة الميدانية
-
-</h1>
-
-<p>
-
-قسم التشغيل CCTV
-
-</p>
-
-</div>
-
-<div>
-
-<img
-src="assets/logo.png"
-class="headerLogo">
-
-</div>
-
-</header><section class="searchSection">
-
-<div class="searchCard" id="searchCard">
-
-<h2>بيانات الخطة</h2>
-
-<label>رقم الخطة</label>
-
-<input
-type="number"
-id="planNumber"
-placeholder="أدخل رقم الخطة">
-
-<button id="searchBtn">
-
-بحث
-
-</button>
-
-</div>
-
-
-
-<div class="routeCard hidden" id="routeCard">
-
-<h2>بيانات المسار</h2>
-
-<label>اسم المسار</label>
-
-<input
-type="text"
-id="routeName"
-readonly>
-
-<button id="backBtn">
-
-⬅ رجوع
-
-</button>
-
-</div>
-
-
-
-<div
-class="actionButtons hidden"
-id="actionButtons">
-
-<button id="missionBtn">
-
-🚗 بدء المهمة
-
-</button>
-
-<button id="historyBtn">
-
-📋 سجل العمليات
-
-</button>
-
-<button id="adminBtn">
-
-🛠 الإدارة
-
-</button>
-
-<button id="settingsBtn">
-
-⚙️ الإعدادات
-
-</button>
-
-</div>
-
-</section><footer class="mainFooter">
-
-<div>
-
-إدارة أنظمة المراقبة الأمنية
-
-</div>
-
-<div>
-
-قسم التشغيل CCTV
-
-</div>
-
-<div>
-
-الإصدار 1.0
-
-</div>
-
-</footer>
-
-</div>
-
-<!-- JavaScript -->
-
-<script src="plans.js"></script>
-
-<script src="app.js"></script>
-
+    <!-- [شاشة 1] الشاشة الترحيبية الكاملة (تختفي تلقائياً بعد ثانيتين) -->
+    <div id="welcome-screen" class="welcome-overlay">
+        <div class="welcome-card">
+            <h1 class="main-title">الحركة الميدانية</h1>
+            <h2 class="sub-title">قسم التشغيل CCTV</h2>
+            <div class="divider-line"></div>
+            <p class="welcome-msg">نسأل الله لكم التوفيق والسلامة<br>في أداء مهامكم.</p>
+        </div>
+    </div>
+
+    <!-- [شاشة 2] شاشة البحث والتحكم بالخطة (تظهر بعد الترحيب) -->
+    <div id="plan-manager-screen" class="main-screen hidden">
+        <div class="manager-card">
+            <div class="manager-header">
+                <i class="fa-solid fa-route manager-icon"></i>
+                <h2>إدارة خطط المراقبة الميدانية</h2>
+                <p>الرجاء إدخال رقم الخطة للتحقق من المسار</p>
+            </div>
+
+            <!-- صندوق البحث -->
+            <div class="search-box">
+                <input type="number" id="plan-input" placeholder="أدخل رقم الخطة هنا...">
+                <button id="search-btn"><i class="fa-solid fa-magnifying-glass"></i> بحث</button>
+            </div>
+            
+            <!-- رسالة الخطأ -->
+            <p id="error-msg" class="error-text hidden">❌ رقم الخطة غير مسجل بالنظام الحين.</p>
+
+            <!-- منطقة ظهور تفاصيل المسار والأزرار (تكون مخفية حتى يتم البحث بنجاح) -->
+            <div id="route-options-area" class="route-area hidden">
+                <div class="route-display">
+                    <span class="route-label">المسار الحالي:</span>
+                    <h3 id="dynamic-route-name">عنيزة والمذنب</h3>
+                </div>
+
+                <!-- الأزرار المطلوبة مصفوفة بتنسيق طولي مريح وجذاب -->
+                <div class="action-buttons-group">
+                    <button id="start-route-btn" class="btn btn-start">
+                        <i class="fa-solid fa-play"></i> بدء المسار الميداني
+                    </button>
+                    <button id="logs-route-btn" class="btn btn-logs">
+                        <i class="fa-solid fa-history"></i> سجلات المسار السابقة
+                    </button>
+                    <button id="back-route-btn" class="btn btn-back">
+                        <i class="fa-solid fa-arrow-right-from-bracket"></i> رجوع للخلف
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- [شاشة 3] شاشة جدول المواقع الميداني (تفتح عند الضغط على "بدء المسار") -->
+    <div id="table-dashboard-screen" class="dashboard-screen hidden">
+        <!-- هنا سنبني الجدول الاحترافي الكامل في خطوتنا القادمة -->
+        <div class="temporary-header">
+            <h2><i class="fa-solid fa-list-check"></i> جدول المواقع والمهام الفعلي</h2>
+            <p>أهلاً بك! هذا هو جدول المتابعة الذي أرسلت صورته.. جاهز للبناء فور إشارتك.</p>
+            <button id="exit-to-manager" class="btn btn-back" style="max-width: 200px; margin: 20px auto;">الرجوع للتحكم</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
 </body>
-
 </html>
