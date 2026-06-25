@@ -34,6 +34,7 @@ export async function updateSiteStatus(input: {
   planNumber: number
   siteCode: string
   status: string
+  storage?: string
   faultNote?: string
   photoTaken?: boolean
 }) {
@@ -48,6 +49,7 @@ export async function updateSiteStatus(input: {
       .update(siteStatuses)
       .set({
         status: input.status,
+        storage: input.storage ?? existing[0].storage,
         faultNote: input.faultNote ?? existing[0].faultNote,
         photoTaken: input.photoTaken ?? existing[0].photoTaken,
         visitedAt: new Date(),
@@ -60,6 +62,7 @@ export async function updateSiteStatus(input: {
       planNumber: input.planNumber,
       siteCode: input.siteCode,
       status: input.status,
+      storage: input.storage,
       faultNote: input.faultNote,
       photoTaken: input.photoTaken ?? false,
       visitedAt: new Date(),

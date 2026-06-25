@@ -57,6 +57,7 @@ export const siteStatuses = pgTable("site_statuses", {
   siteCode: text("siteCode").notNull(),
   planNumber: integer("planNumber").notNull(),
   status: text("status").notNull(),
+  storage: text("storage"), // نوع وحدة التخزين يختاره الموظف: فلاش | هارد ديسك
   faultNote: text("faultNote"),
   photoTaken: boolean("photoTaken").notNull().default(false),
   visitedAt: timestamp("visitedAt"),

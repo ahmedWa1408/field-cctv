@@ -16,6 +16,8 @@ const STATUS_OPTIONS = [
   { value: "not_working", label: "لا يعمل", color: "text-destructive border-destructive/50 bg-destructive/10" },
 ]
 
+const STORAGE_OPTIONS = ["فلاش", "هارد ديسك"]
+
 function statusLabel(v: string) {
   return STATUS_OPTIONS.find((s) => s.value === v)?.label ?? "غير محدد"
 }
@@ -48,6 +50,18 @@ export function FieldTable({
   onStatusChange: (code: string, status: string) => void
 }) {
   const [copied, setCopied] = useState<string | null>(null)
+  const [storages, setStorages] = useState<Record<string, string>>(() =>
+    Object.fromEntries(sites.filter((s) => s.storage).map((s) => [s.code, s.storage as string])),
+  )
+
+  async function handleStorage(site: Site, value: string) {
+    setStorages((prev) => ({ ...prev, [site.code]: value }))
+    // إن كانت هناك حالة محفوظة بالفعل، نحفظ التخزين مباشرةً
+    const current = statuses[site.code]
+    if (current) {
+      await updateSiteStatus({ missionId, planNumber, siteCode: site.code, status: current, storage: value })
+    }
+  }
 
   async function handleCamera(site: Site) {
     const status = statuses[site.code] || "غير محدد"
@@ -66,7 +80,13 @@ export function FieldTable({
 
   async function setStatus(site: Site, value: string) {
     onStatusChange(site.code, value)
-    await updateSiteStatus({ missionId, planNumber, siteCode: site.code, status: value })
+    await updateSiteStatus({
+      missionId,
+      planNumber,
+      siteCode: site.code,
+      status: value,
+      storage: storages[site.code],
+    })
   }
 
   return (
@@ -93,11 +113,21 @@ export function FieldTable({
                 <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/15 text-sm font-bold text-primary md:mx-auto">
                   {idx + 1}
                 </span>
-                <div className="min-w-0 flex-1">
+                <div className="flex min-w-0 flex-1 items-center gap-2">
                   <p className="truncate text-base font-bold text-foreground">{site.code}</p>
-                  {site.storage && (
-                    <p className="text-xs text-muted-foreground">التخزين: {site.storage}</p>
-                  )}
+                  <select
+                    aria-label={`نوع وحدة التخزين للموقع ${site.code}`}
+                    value={storages[site.code] ?? ""}
+                    onChange={(e) => handleStorage(site, e.target.value)}
+                    className="h-9 shrink-0 rounded-lg border border-border bg-background px-2 text-xs font-medium text-foreground focus:border-primary focus:outline-none"
+                  >
+                    <option value="">التخزين</option>
+                    {STORAGE_OPTIONS.map((opt) => (
+                      <option key={opt} value={opt}>
+                        {opt}
+                      </option>
+                    ))}
+                  </select>
                 </div>
               </div>
 
