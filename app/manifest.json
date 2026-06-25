@@ -1,0 +1,19 @@
+{
+  "name": "تحكم | المراقبة الميدانية CCTV",
+  "short_name": "تحكم",
+  "description": "نظام إدارة وتشغيل المراقبة الميدانية",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a1020",
+  "theme_color": "#0a1020",
+  "dir": "rtl",
+  "lang": "ar",
+  "icons": [
+    {
+      "src": "/icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

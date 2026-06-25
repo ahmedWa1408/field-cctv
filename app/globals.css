@@ -1,0 +1,91 @@
+@import "tailwindcss";
+
+@theme inline {
+  --font-sans: "Tajawal", ui-sans-serif, system-ui, sans-serif;
+
+  --color-background: oklch(0.16 0.02 250);
+  --color-foreground: oklch(0.97 0.01 250);
+
+  --color-card: oklch(0.21 0.025 255);
+  --color-card-foreground: oklch(0.97 0.01 250);
+
+  --color-popover: oklch(0.21 0.025 255);
+  --color-popover-foreground: oklch(0.97 0.01 250);
+
+  --color-primary: oklch(0.72 0.16 195);
+  --color-primary-foreground: oklch(0.16 0.02 250);
+
+  --color-secondary: oklch(0.28 0.03 255);
+  --color-secondary-foreground: oklch(0.97 0.01 250);
+
+  --color-muted: oklch(0.28 0.03 255);
+  --color-muted-foreground: oklch(0.7 0.02 250);
+
+  --color-accent: oklch(0.75 0.14 85);
+  --color-accent-foreground: oklch(0.16 0.02 250);
+
+  --color-destructive: oklch(0.62 0.21 25);
+  --color-destructive-foreground: oklch(0.98 0.01 250);
+
+  --color-success: oklch(0.7 0.16 150);
+  --color-success-foreground: oklch(0.16 0.02 250);
+
+  --color-warning: oklch(0.78 0.15 75);
+  --color-warning-foreground: oklch(0.16 0.02 250);
+
+  --color-border: oklch(0.32 0.03 255);
+  --color-input: oklch(0.32 0.03 255);
+  --color-ring: oklch(0.72 0.16 195);
+
+  --radius: 0.75rem;
+}
+
+* {
+  border-color: var(--color-border);
+}
+
+html {
+  background-color: var(--color-background);
+}
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  -webkit-tap-highlight-color: transparent;
+}
+
+@keyframes glow-pulse {
+  0%, 100% {
+    opacity: 1;
+    filter: drop-shadow(0 0 12px var(--color-primary)) drop-shadow(0 0 36px var(--color-primary));
+  }
+  50% {
+    opacity: 0.85;
+    filter: drop-shadow(0 0 6px var(--color-primary)) drop-shadow(0 0 18px var(--color-primary));
+  }
+}
+
+@keyframes border-sweep {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes scale-in {
+  from { opacity: 0; transform: scale(0.8); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.animate-glow {
+  animation: glow-pulse 2.4s ease-in-out infinite;
+}
+.animate-fade-up {
+  animation: fade-up 0.7s ease-out both;
+}
+.animate-scale-in {
+  animation: scale-in 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
