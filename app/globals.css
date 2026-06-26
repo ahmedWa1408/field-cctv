@@ -3,39 +3,50 @@
 @theme inline {
   --font-sans: "Tajawal", ui-sans-serif, system-ui, sans-serif;
 
-  --color-background: oklch(0.16 0.02 250);
-  --color-foreground: oklch(0.97 0.01 250);
+  /* خلفية فاتحة وبطاقات بيضاء مطابقة للتصميم */
+  --color-background: oklch(0.96 0.008 250);
+  --color-foreground: oklch(0.22 0.03 260);
 
-  --color-card: oklch(0.21 0.025 255);
-  --color-card-foreground: oklch(0.97 0.01 250);
+  --color-card: oklch(1 0 0);
+  --color-card-foreground: oklch(0.22 0.03 260);
 
-  --color-popover: oklch(0.21 0.025 255);
-  --color-popover-foreground: oklch(0.97 0.01 250);
+  --color-popover: oklch(1 0 0);
+  --color-popover-foreground: oklch(0.22 0.03 260);
 
-  --color-primary: oklch(0.72 0.16 195);
-  --color-primary-foreground: oklch(0.16 0.02 250);
+  /* الكحلي الداكن للهيدر والأزرار الأساسية */
+  --color-primary: oklch(0.27 0.05 262);
+  --color-primary-foreground: oklch(0.98 0.005 250);
 
-  --color-secondary: oklch(0.28 0.03 255);
-  --color-secondary-foreground: oklch(0.97 0.01 250);
+  --color-secondary: oklch(0.93 0.012 250);
+  --color-secondary-foreground: oklch(0.27 0.05 262);
 
-  --color-muted: oklch(0.28 0.03 255);
-  --color-muted-foreground: oklch(0.7 0.02 250);
+  --color-muted: oklch(0.93 0.012 250);
+  --color-muted-foreground: oklch(0.5 0.02 258);
 
-  --color-accent: oklch(0.75 0.14 85);
-  --color-accent-foreground: oklch(0.16 0.02 250);
+  /* أخضر الاعتماد/الحفظ */
+  --color-accent: oklch(0.62 0.15 152);
+  --color-accent-foreground: oklch(0.99 0.005 150);
 
-  --color-destructive: oklch(0.62 0.21 25);
-  --color-destructive-foreground: oklch(0.98 0.01 250);
+  --color-destructive: oklch(0.58 0.22 27);
+  --color-destructive-foreground: oklch(0.99 0.005 250);
 
-  --color-success: oklch(0.7 0.16 150);
-  --color-success-foreground: oklch(0.16 0.02 250);
+  --color-success: oklch(0.62 0.15 152);
+  --color-success-foreground: oklch(0.99 0.005 150);
 
-  --color-warning: oklch(0.78 0.15 75);
-  --color-warning-foreground: oklch(0.16 0.02 250);
+  --color-warning: oklch(0.72 0.16 65);
+  --color-warning-foreground: oklch(0.25 0.04 60);
 
-  --color-border: oklch(0.32 0.03 255);
-  --color-input: oklch(0.32 0.03 255);
-  --color-ring: oklch(0.72 0.16 195);
+  --color-border: oklch(0.89 0.012 255);
+  --color-input: oklch(0.89 0.012 255);
+  --color-ring: oklch(0.27 0.05 262);
+
+  /* الكحلي الخاص بالهيدر (أغمق قليلًا) */
+  --color-header: oklch(0.24 0.05 262);
+  --color-header-foreground: oklch(0.98 0.005 250);
+
+  /* ألوان هوية تحكم للشاشة الافتتاحية */
+  --color-brand-plum: oklch(0.4 0.11 350);
+  --color-brand-teal: oklch(0.7 0.1 190);
 
   --radius: 0.75rem;
 }
@@ -80,8 +91,38 @@ body {
   to { opacity: 1; transform: scale(1); }
 }
 
+@keyframes brand-glow {
+  0%, 100% {
+    filter: drop-shadow(0 0 18px color-mix(in oklch, var(--color-brand-teal) 80%, transparent))
+            drop-shadow(0 0 48px color-mix(in oklch, var(--color-brand-plum) 60%, transparent));
+  }
+  50% {
+    filter: drop-shadow(0 0 8px color-mix(in oklch, var(--color-brand-teal) 60%, transparent))
+            drop-shadow(0 0 24px color-mix(in oklch, var(--color-brand-plum) 40%, transparent));
+  }
+}
+
+@keyframes ring-expand {
+  0% { transform: scale(0.6); opacity: 0.9; }
+  100% { transform: scale(2.4); opacity: 0; }
+}
+
+@keyframes sweep-shine {
+  0% { transform: translateX(-150%) skewX(-20deg); }
+  100% { transform: translateX(250%) skewX(-20deg); }
+}
+
 .animate-glow {
   animation: glow-pulse 2.4s ease-in-out infinite;
+}
+.animate-brand-glow {
+  animation: brand-glow 2.6s ease-in-out infinite;
+}
+.animate-ring {
+  animation: ring-expand 2.2s ease-out infinite;
+}
+.animate-shine {
+  animation: sweep-shine 2.4s ease-in-out infinite;
 }
 .animate-fade-up {
   animation: fade-up 0.7s ease-out both;

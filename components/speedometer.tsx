@@ -7,7 +7,7 @@ export function Speedometer({
   speed: number
   roadLimit: number | null
 }) {
-  const over = roadLimit != null && speed > roadLimit + 10
+  const over = roadLimit != null && speed > roadLimit * 1.2
 
   return (
     <div className="flex items-stretch gap-3">

@@ -10,173 +10,246 @@ type Site = {
   mapUrl: string | null
 }
 
-const STATUS_OPTIONS = [
-  { value: "working_clean", label: "يعمل ولا توجد مخالفات", color: "text-success border-success/50 bg-success/10" },
-  { value: "working_violation", label: "يعمل وتوجد مخالفات", color: "text-warning border-warning/50 bg-warning/10" },
-  { value: "not_working", label: "لا يعمل", color: "text-destructive border-destructive/50 bg-destructive/10" },
-]
-
-const STORAGE_OPTIONS = ["فلاش", "هارد ديسك"]
-
-function statusLabel(v: string) {
-  return STATUS_OPTIONS.find((s) => s.value === v)?.label ?? "غير محدد"
+export type RowState = {
+  status?: string
+  storage?: string
+  xmlStatus?: string
+  faultNote?: string
+  monitorStart?: string // datetime-local
+  monitorEnd?: string
+  photoCount?: number
 }
 
-function openTimestampCamera() {
-  // محاولة فتح تطبيق Timestamp Camera على أندرويد عبر intent
-  const ua = navigator.userAgent || ""
-  if (/android/i.test(ua)) {
-    window.location.href =
-      "intent://#Intent;package=com.jeyluta.timestampcamerafree;action=android.media.action.IMAGE_CAPTURE;end"
-  } else {
-    // iOS / سطح المكتب: لا يمكن فتح التطبيق الخارجي مباشرة
-    alert(
-      "تم نسخ رمز الموقع والحالة. افتح تطبيق Timestamp Camera والصق العلامة المائية يدويًا.",
-    )
-  }
+const STATUS_OPTIONS = [
+  { value: "working_clean", label: "يعمل ولا توجد مخالفات", short: "يعمل", dot: "bg-success", ring: "ring-success" },
+  { value: "working_violation", label: "يعمل وتوجد مخالفات", short: "مخالفة", dot: "bg-warning", ring: "ring-warning" },
+  { value: "not_working", label: "لا يعمل", short: "لا يعمل", dot: "bg-destructive", ring: "ring-destructive" },
+]
+
+const STORAGE_OPTIONS = ["فلاش", "هاردسك"]
+const XML_OPTIONS = ["يوجد", "لا يوجد"]
+
+function fmtDuration(start?: string, end?: string) {
+  if (!start || !end) return "—"
+  const s = new Date(start).getTime()
+  const e = new Date(end).getTime()
+  if (isNaN(s) || isNaN(e) || e <= s) return "—"
+  const mins = Math.round((e - s) / 60000)
+  const h = Math.floor(mins / 60)
+  const m = mins % 60
+  return h ? `${h} س ${m ? m + " د" : ""}`.trim() : `${m} د`
 }
 
 export function FieldTable({
   sites,
   missionId,
   planNumber,
-  statuses,
-  onStatusChange,
+  rows,
+  onRowChange,
+  routeName,
 }: {
   sites: Site[]
   missionId: number
   planNumber: number
-  statuses: Record<string, string>
-  onStatusChange: (code: string, status: string) => void
+  rows: Record<string, RowState>
+  onRowChange: (code: string, patch: Partial<RowState>) => void
+  routeName: string
 }) {
   const [copied, setCopied] = useState<string | null>(null)
-  const [storages, setStorages] = useState<Record<string, string>>(() =>
-    Object.fromEntries(sites.filter((s) => s.storage).map((s) => [s.code, s.storage as string])),
-  )
 
-  async function handleStorage(site: Site, value: string) {
-    setStorages((prev) => ({ ...prev, [site.code]: value }))
-    // إن كانت هناك حالة محفوظة بالفعل، نحفظ التخزين مباشرةً
-    const current = statuses[site.code]
-    if (current) {
-      await updateSiteStatus({ missionId, planNumber, siteCode: site.code, status: current, storage: value })
-    }
-  }
-
-  async function handleCamera(site: Site) {
-    const status = statuses[site.code] || "غير محدد"
-    const text = `${site.code} - ${statusLabel(status)}`
-    try {
-      await navigator.clipboard.writeText(text)
-      setCopied(site.code)
-      setTimeout(() => setCopied((c) => (c === site.code ? null : c)), 1800)
-    } catch {
-      // تجاهل
-    }
-    // تعليم أن صورة قد التُقطت
-    updateSiteStatus({ missionId, planNumber, siteCode: site.code, status: status === "غير محدد" ? "working_clean" : status, photoTaken: true })
-    openTimestampCamera()
-  }
-
-  async function setStatus(site: Site, value: string) {
-    onStatusChange(site.code, value)
-    await updateSiteStatus({
+  function persist(code: string, patch: Partial<RowState>) {
+    onRowChange(code, patch)
+    const r = { ...rows[code], ...patch }
+    updateSiteStatus({
       missionId,
       planNumber,
-      siteCode: site.code,
-      status: value,
-      storage: storages[site.code],
+      siteCode: code,
+      status: r.status,
+      storage: r.storage,
+      xmlStatus: r.xmlStatus,
+      faultNote: r.faultNote,
+      monitorStartAt: r.monitorStart ? r.monitorStart : undefined,
+      monitorEndAt: r.monitorEnd ? r.monitorEnd : undefined,
     })
   }
 
-  return (
-    <div className="overflow-hidden rounded-2xl border border-border bg-card">
-      {/* رأس الجدول — يظهر على الشاشات المتوسطة فأكبر */}
-      <div className="hidden grid-cols-[2.5rem_1fr_5rem_4rem_1fr] gap-2 border-b border-border bg-secondary px-3 py-3 text-xs font-bold text-secondary-foreground md:grid">
-        <span className="text-center">#</span>
-        <span>رمز الموقع</span>
-        <span className="text-center">الكاميرا</span>
-        <span className="text-center">الخريطة</span>
-        <span className="text-center">الحالة</span>
-      </div>
+  async function handleCamera(site: Site) {
+    const r = rows[site.code] || {}
+    const statusLabel = STATUS_OPTIONS.find((s) => s.value === r.status)?.label ?? "غير محدد"
+    // العلامة المائية: اسم الموقع + اسم المسار + نوع العطل
+    const watermark = [site.code, routeName, r.faultNote || statusLabel].filter(Boolean).join(" | ")
+    try {
+      await navigator.clipboard.writeText(watermark)
+      setCopied(site.code)
+      setTimeout(() => setCopied((c) => (c === site.code ? null : c)), 1800)
+    } catch {}
+    persist(site.code, { photoCount: (r.photoCount || 0) + 1 })
+    openTimestampCamera()
+  }
 
-      <ul className="divide-y divide-border">
-        {sites.map((site, idx) => {
-          const current = statuses[site.code]
-          return (
-            <li
-              key={site.id}
-              className="grid grid-cols-1 gap-3 p-3 md:grid-cols-[2.5rem_1fr_5rem_4rem_1fr] md:items-center md:gap-2"
-            >
-              {/* الترتيب + الرمز (سطر علوي على الجوال) */}
-              <div className="flex items-center gap-3 md:contents">
-                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/15 text-sm font-bold text-primary md:mx-auto">
-                  {idx + 1}
-                </span>
-                <div className="flex min-w-0 flex-1 items-center gap-2">
-                  <p className="truncate text-base font-bold text-foreground">{site.code}</p>
+  return (
+    <div className="overflow-x-auto rounded-2xl border border-border bg-card">
+      <table className="w-full min-w-[920px] border-collapse text-right text-sm">
+        <thead>
+          <tr className="bg-primary text-primary-foreground">
+            <Th>#</Th>
+            <Th>رمز الموقع</Th>
+            <Th>نوع الوحدة</Th>
+            <Th>الموقع</Th>
+            <Th>XML</Th>
+            <Th>بداية الرصد</Th>
+            <Th>نهاية الرصد</Th>
+            <Th>مدة الرصد</Th>
+            <Th>صور العطل</Th>
+            <Th>ملاحظات</Th>
+            <Th>الحالة</Th>
+          </tr>
+        </thead>
+        <tbody>
+          {sites.map((site, idx) => {
+            const r = rows[site.code] || {}
+            const statusOpt = STATUS_OPTIONS.find((s) => s.value === r.status)
+            return (
+              <tr key={site.id} className="border-b border-border last:border-0 odd:bg-background/40">
+                <Td className="text-center font-bold text-muted-foreground">{idx + 1}</Td>
+                <Td className="whitespace-nowrap font-bold text-foreground">{site.code}</Td>
+
+                {/* نوع الوحدة */}
+                <Td>
                   <select
-                    aria-label={`نوع وحدة التخزين للموقع ${site.code}`}
-                    value={storages[site.code] ?? ""}
-                    onChange={(e) => handleStorage(site, e.target.value)}
-                    className="h-9 shrink-0 rounded-lg border border-border bg-background px-2 text-xs font-medium text-foreground focus:border-primary focus:outline-none"
+                    aria-label="نوع الوحدة"
+                    value={r.storage ?? site.storage ?? ""}
+                    onChange={(e) => persist(site.code, { storage: e.target.value })}
+                    className="h-9 w-24 rounded-lg border border-input bg-background px-2 text-xs font-medium outline-none focus:border-primary"
                   >
-                    <option value="">التخزين</option>
-                    {STORAGE_OPTIONS.map((opt) => (
-                      <option key={opt} value={opt}>
-                        {opt}
-                      </option>
+                    <option value="">اختر</option>
+                    {STORAGE_OPTIONS.map((o) => (
+                      <option key={o} value={o}>{o}</option>
                     ))}
                   </select>
-                </div>
-              </div>
+                </Td>
 
-              {/* أزرار الكاميرا والخريطة (سطر على الجوال) */}
-              <div className="flex items-center gap-2 md:contents">
-                <button
-                  onClick={() => handleCamera(site)}
-                  className="flex h-11 flex-1 items-center justify-center gap-1.5 rounded-xl border border-primary/40 bg-primary/10 px-2 text-sm font-bold text-primary transition active:scale-95 md:mx-auto md:w-full md:flex-none"
-                >
-                  {copied === site.code ? "تم النسخ" : "صورة"}
-                </button>
-
-                {site.mapUrl ? (
-                  <a
-                    href={site.mapUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex h-11 flex-1 items-center justify-center rounded-xl border border-border bg-secondary px-2 text-sm font-medium text-secondary-foreground transition active:scale-95 md:mx-auto md:w-full md:flex-none"
-                  >
-                    خريطة
-                  </a>
-                ) : (
-                  <span className="flex h-11 flex-1 items-center justify-center rounded-xl border border-border bg-background px-2 text-xs text-muted-foreground md:mx-auto md:w-full md:flex-none">
-                    —
-                  </span>
-                )}
-              </div>
-
-              {/* محدد الحالة */}
-              <div className="flex flex-col gap-1.5 md:flex-row md:flex-wrap md:justify-center">
-                {STATUS_OPTIONS.map((opt) => {
-                  const active = current === opt.value
-                  return (
-                    <button
-                      key={opt.value}
-                      onClick={() => setStatus(site, opt.value)}
-                      className={`h-9 rounded-lg border px-2 text-xs font-bold transition active:scale-95 ${
-                        active ? opt.color : "border-border bg-background text-muted-foreground"
-                      }`}
+                {/* الموقع / الخريطة */}
+                <Td>
+                  {site.mapUrl ? (
+                    <a
+                      href={site.mapUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex h-9 items-center gap-1 rounded-lg border border-input bg-background px-3 text-xs font-medium text-primary"
                     >
-                      {opt.label}
-                    </button>
-                  )
-                })}
-              </div>
-            </li>
-          )
-        })}
-      </ul>
+                      فتح الموقع
+                    </a>
+                  ) : (
+                    <span className="text-xs text-muted-foreground">—</span>
+                  )}
+                </Td>
+
+                {/* XML منسدلة */}
+                <Td>
+                  <select
+                    aria-label="حالة XML"
+                    value={r.xmlStatus ?? ""}
+                    onChange={(e) => persist(site.code, { xmlStatus: e.target.value })}
+                    className={`h-9 w-20 rounded-lg border border-input bg-background px-2 text-xs font-bold outline-none focus:border-primary ${
+                      r.xmlStatus === "يوجد" ? "text-success" : r.xmlStatus === "لا يوجد" ? "text-destructive" : ""
+                    }`}
+                  >
+                    <option value="">—</option>
+                    {XML_OPTIONS.map((o) => (
+                      <option key={o} value={o}>{o}</option>
+                    ))}
+                  </select>
+                </Td>
+
+                {/* بداية الرصد */}
+                <Td>
+                  <input
+                    type="datetime-local"
+                    aria-label="بداية المجلد"
+                    value={r.monitorStart ?? ""}
+                    onChange={(e) => persist(site.code, { monitorStart: e.target.value })}
+                    className="h-9 w-40 rounded-lg border border-input bg-background px-2 text-xs outline-none focus:border-primary"
+                  />
+                </Td>
+
+                {/* نهاية الرصد */}
+                <Td>
+                  <input
+                    type="datetime-local"
+                    aria-label="نهاية المجلد"
+                    value={r.monitorEnd ?? ""}
+                    onChange={(e) => persist(site.code, { monitorEnd: e.target.value })}
+                    className="h-9 w-40 rounded-lg border border-input bg-background px-2 text-xs outline-none focus:border-primary"
+                  />
+                </Td>
+
+                {/* مدة الرصد */}
+                <Td className="whitespace-nowrap text-center text-xs font-bold text-foreground">
+                  {fmtDuration(r.monitorStart, r.monitorEnd)}
+                </Td>
+
+                {/* صور العطل + زر التصوير */}
+                <Td>
+                  <button
+                    onClick={() => handleCamera(site)}
+                    className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-primary/40 bg-primary/10 px-3 text-xs font-bold text-primary transition active:scale-95"
+                  >
+                    {copied === site.code ? "تم النسخ" : `صورة ${r.photoCount || 0}`}
+                  </button>
+                </Td>
+
+                {/* ملاحظات / نوع العطل */}
+                <Td>
+                  <input
+                    value={r.faultNote ?? ""}
+                    onChange={(e) => persist(site.code, { faultNote: e.target.value })}
+                    placeholder="نوع العطل / ملاحظة"
+                    className="h-9 w-36 rounded-lg border border-input bg-background px-2 text-xs outline-none focus:border-primary"
+                  />
+                </Td>
+
+                {/* حالة الإنجاز */}
+                <Td>
+                  <div className="flex flex-col gap-1">
+                    {STATUS_OPTIONS.map((opt) => (
+                      <button
+                        key={opt.value}
+                        onClick={() => persist(site.code, { status: opt.value })}
+                        className={`flex h-7 items-center gap-1.5 rounded-md border px-2 text-[11px] font-bold transition ${
+                          r.status === opt.value
+                            ? "border-foreground/20 bg-secondary"
+                            : "border-transparent text-muted-foreground hover:bg-secondary/50"
+                        }`}
+                      >
+                        <span className={`h-2.5 w-2.5 rounded-full ${opt.dot}`} />
+                        {opt.short}
+                      </button>
+                    ))}
+                  </div>
+                </Td>
+              </tr>
+            )
+          })}
+        </tbody>
+      </table>
     </div>
   )
+}
+
+function Th({ children }: { children: React.ReactNode }) {
+  return <th className="whitespace-nowrap px-3 py-3 text-center text-xs font-bold">{children}</th>
+}
+function Td({ children, className = "" }: { children: React.ReactNode; className?: string }) {
+  return <td className={`px-3 py-2.5 align-middle ${className}`}>{children}</td>
+}
+
+function openTimestampCamera() {
+  const ua = navigator.userAgent || ""
+  if (/android/i.test(ua)) {
+    window.location.href =
+      "intent://#Intent;package=com.jeyluta.timestampcamerafree;action=android.media.action.IMAGE_CAPTURE;end"
+  } else {
+    alert("تم نسخ بيانات العلامة المائية (الموقع | المسار | العطل). افتح تطبيق Timestamp Camera والصقها.")
+  }
 }

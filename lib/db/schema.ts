@@ -44,6 +44,18 @@ export const missions = pgTable("missions", {
   planNumber: integer("planNumber").notNull(),
   employeeId: text("employeeId").notNull(),
   employeeName: text("employeeName").notNull(),
+  // بيانات السيارة والمعدات
+  plateLetters: text("plateLetters"), // 3 أحرف
+  plateNumbers: text("plateNumbers"), // أرقام اللوحة
+  laptopNumber: text("laptopNumber"),
+  flashCount: integer("flashCount"),
+  hddCount: integer("hddCount"),
+  // ملاحظات عامة واعتماد المشرف
+  generalNotes: text("generalNotes"),
+  supervisorName: text("supervisorName"),
+  supervisorId: text("supervisorId"),
+  approved: boolean("approved").notNull().default(false),
+  approvedAt: timestamp("approvedAt"),
   startedAt: timestamp("startedAt").notNull().defaultNow(),
   endedAt: timestamp("endedAt"),
   active: boolean("active").notNull().default(true),
@@ -57,9 +69,12 @@ export const siteStatuses = pgTable("site_statuses", {
   siteCode: text("siteCode").notNull(),
   planNumber: integer("planNumber").notNull(),
   status: text("status").notNull(),
-  storage: text("storage"), // نوع وحدة التخزين يختاره الموظف: فلاش | هارد ديسك
+  storage: text("storage"), // نوع الوحدة يختاره الموظف: فلاش | هاردسك
+  xmlStatus: text("xmlStatus"), // يوجد | لا يوجد
   faultNote: text("faultNote"),
   photoTaken: boolean("photoTaken").notNull().default(false),
+  monitorStartAt: timestamp("monitorStartAt"), // بداية المجلد
+  monitorEndAt: timestamp("monitorEndAt"), // نهاية المجلد
   visitedAt: timestamp("visitedAt"),
   updatedAt: timestamp("updatedAt").notNull().defaultNow(),
 })

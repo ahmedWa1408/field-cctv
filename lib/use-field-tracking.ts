@@ -98,10 +98,10 @@ export function useFieldTracking(args: TrackingArgs) {
         // حد سرعة الطريق من OSM (استعلام كل ~150م أو 20ث)
         maybeFetchRoadLimit(cur)
 
-        // كشف السرعة الزائدة
+        // كشف السرعة الزائدة (تجاوز حد الطريق بأكثر من 20%)
         const limit = roadLimitRef.current ?? argsRef.current.planSpeedLimit
-        if (limit && kmh > limit + 10) {
-          report("overspeed", `سرعة ${kmh} كم/س على طريق حده ${limit} كم/س`)
+        if (limit && kmh > limit * 1.2) {
+          report("overspeed", `سرعة ${kmh} كم/س على طريق حده ${limit} كم/س (تجاوز 20%)`)
         }
 
         // كشف التواجد خارج المسار لأكثر من ساعتين

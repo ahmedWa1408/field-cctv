@@ -3,43 +3,40 @@
 import { useState } from "react"
 import Link from "next/link"
 import { SplashScreen } from "./splash-screen"
+import { IdStep } from "./id-step"
 import { PlanStep, type PlanData } from "./plan-step"
-import { EmployeeStep } from "./employee-step"
+import { VehicleStep, type VehicleData } from "./vehicle-step"
 import { MissionScreen } from "./mission-screen"
 import { startMission } from "@/app/actions/missions"
 
-type Step = "splash" | "plan" | "employee" | "mission"
+type Step = "splash" | "id" | "plan" | "vehicle" | "mission"
 
 export function FieldFlow() {
   const [step, setStep] = useState<Step>("splash")
-  const [plan, setPlan] = useState<NonNullable<PlanData> | null>(null)
   const [employee, setEmployee] = useState<{ id: string; name: string } | null>(null)
+  const [plan, setPlan] = useState<NonNullable<PlanData> | null>(null)
+  const [vehicle, setVehicle] = useState<VehicleData | null>(null)
   const [missionId, setMissionId] = useState<number | null>(null)
 
-  async function handleStart(id: string, name: string) {
-    if (!plan) return
-    const mission = await startMission(plan.plan.planNumber, id, name)
-    setEmployee({ id, name })
+  async function handleStart(v: VehicleData) {
+    if (!plan || !employee) return
+    const mission = await startMission(plan.plan.planNumber, employee.id, employee.name, v)
+    setVehicle(v)
     setMissionId(mission.id)
     setStep("mission")
   }
 
   if (step === "splash") {
-    return (
-      <>
-        <SplashScreen onDone={() => setStep("plan")} />
-        <div className="min-h-dvh" />
-      </>
-    )
+    return <SplashScreen onDone={() => setStep("id")} />
   }
 
-  if (step === "plan") {
+  if (step === "id") {
     return (
       <div className="relative">
-        <PlanStep
-          onFound={(data) => {
-            setPlan(data)
-            setStep("employee")
+        <IdStep
+          onNext={(id, name) => {
+            setEmployee({ id, name })
+            setStep("plan")
           }}
         />
         <Link
@@ -52,10 +49,24 @@ export function FieldFlow() {
     )
   }
 
-  if (step === "employee" && plan) {
+  if (step === "plan" && employee) {
     return (
-      <EmployeeStep
+      <PlanStep
+        employeeName={employee.name}
+        onBack={() => setStep("id")}
+        onFound={(data) => {
+          setPlan(data)
+          setStep("vehicle")
+        }}
+      />
+    )
+  }
+
+  if (step === "vehicle" && plan && employee) {
+    return (
+      <VehicleStep
         plan={plan}
+        employeeName={employee.name}
         onBack={() => setStep("plan")}
         onStart={handleStart}
       />
@@ -69,10 +80,11 @@ export function FieldFlow() {
         missionId={missionId}
         employeeId={employee.id}
         employeeName={employee.name}
+        vehicle={vehicle}
         onExit={() => {
-          setStep("plan")
+          setStep("id")
           setPlan(null)
-          setEmployee(null)
+          setVehicle(null)
           setMissionId(null)
         }}
       />

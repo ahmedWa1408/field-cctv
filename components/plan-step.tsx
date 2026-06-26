@@ -5,7 +5,15 @@ import { getPlan } from "@/app/actions/plans"
 
 export type PlanData = Awaited<ReturnType<typeof getPlan>>
 
-export function PlanStep({ onFound }: { onFound: (data: NonNullable<PlanData>) => void }) {
+export function PlanStep({
+  employeeName,
+  onFound,
+  onBack,
+}: {
+  employeeName?: string
+  onFound: (data: NonNullable<PlanData>) => void
+  onBack?: () => void
+}) {
   const [value, setValue] = useState("")
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
@@ -30,13 +38,15 @@ export function PlanStep({ onFound }: { onFound: (data: NonNullable<PlanData>) =
 
   return (
     <div className="mx-auto flex min-h-dvh w-full max-w-md flex-col items-center justify-center gap-8 p-6">
-      <div className="flex flex-col items-center gap-3 text-center">
-        <h1 className="animate-glow text-5xl font-extrabold text-primary">تحكم</h1>
-        <p className="text-sm text-muted-foreground">أدخل رقم الخطة لبدء المسار الميداني</p>
+      <div className="flex flex-col items-center gap-2 text-center">
+        <h1 className="text-2xl font-extrabold text-primary">رقم الخطة</h1>
+        <p className="text-sm text-muted-foreground">
+          {employeeName ? `${employeeName} · ` : ""}أدخل رقم الخطة لبدء المسار الميداني
+        </p>
       </div>
 
       <form onSubmit={submit} className="w-full animate-fade-up">
-        <div className="rounded-2xl border border-border bg-card p-6 shadow-xl shadow-black/30">
+        <div className="rounded-2xl border border-border bg-card p-6 shadow-xl shadow-black/10">
           <label htmlFor="plan" className="mb-2 block text-sm font-medium text-card-foreground">
             رقم الخطة
           </label>
@@ -57,6 +67,15 @@ export function PlanStep({ onFound }: { onFound: (data: NonNullable<PlanData>) =
           >
             {loading ? "جارٍ البحث..." : "متابعة"}
           </button>
+          {onBack && (
+            <button
+              type="button"
+              onClick={onBack}
+              className="mt-3 h-12 w-full rounded-xl border border-border bg-secondary text-sm font-medium text-secondary-foreground transition active:scale-[0.98]"
+            >
+              رجوع
+            </button>
+          )}
         </div>
       </form>
     </div>
