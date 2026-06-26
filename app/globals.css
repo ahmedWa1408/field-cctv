@@ -13,40 +13,40 @@
   --color-popover: oklch(1 0 0);
   --color-popover-foreground: oklch(0.22 0.03 260);
 
-  /* الكحلي الداكن للهيدر والأزرار الأساسية */
-  --color-primary: oklch(0.27 0.05 262);
-  --color-primary-foreground: oklch(0.98 0.005 250);
+  /* البنفسجي العنابي (هوية تحكم) للهيدر والأزرار الأساسية */
+  --color-primary: oklch(0.4 0.12 350);
+  --color-primary-foreground: oklch(0.99 0.005 350);
 
-  --color-secondary: oklch(0.93 0.012 250);
-  --color-secondary-foreground: oklch(0.27 0.05 262);
+  --color-secondary: oklch(0.95 0.015 330);
+  --color-secondary-foreground: oklch(0.4 0.12 350);
 
-  --color-muted: oklch(0.93 0.012 250);
-  --color-muted-foreground: oklch(0.5 0.02 258);
+  --color-muted: oklch(0.95 0.01 320);
+  --color-muted-foreground: oklch(0.5 0.03 330);
 
-  /* أخضر الاعتماد/الحفظ */
-  --color-accent: oklch(0.62 0.15 152);
-  --color-accent-foreground: oklch(0.99 0.005 150);
+  /* التركوازي (هوية تحكم) — لون مميز للاعتماد والعناصر الحيّة */
+  --color-accent: oklch(0.7 0.11 190);
+  --color-accent-foreground: oklch(0.99 0.005 190);
 
   --color-destructive: oklch(0.58 0.22 27);
   --color-destructive-foreground: oklch(0.99 0.005 250);
 
-  --color-success: oklch(0.62 0.15 152);
-  --color-success-foreground: oklch(0.99 0.005 150);
+  --color-success: oklch(0.64 0.14 162);
+  --color-success-foreground: oklch(0.99 0.005 160);
 
-  --color-warning: oklch(0.72 0.16 65);
-  --color-warning-foreground: oklch(0.25 0.04 60);
+  --color-warning: oklch(0.74 0.16 70);
+  --color-warning-foreground: oklch(0.28 0.05 60);
 
-  --color-border: oklch(0.89 0.012 255);
-  --color-input: oklch(0.89 0.012 255);
-  --color-ring: oklch(0.27 0.05 262);
+  --color-border: oklch(0.9 0.012 330);
+  --color-input: oklch(0.9 0.012 330);
+  --color-ring: oklch(0.4 0.12 350);
 
-  /* الكحلي الخاص بالهيدر (أغمق قليلًا) */
-  --color-header: oklch(0.24 0.05 262);
-  --color-header-foreground: oklch(0.98 0.005 250);
+  /* الهيدر بتدرّج هوية تحكم */
+  --color-header: oklch(0.36 0.12 350);
+  --color-header-foreground: oklch(0.99 0.005 350);
 
-  /* ألوان هوية تحكم للشاشة الافتتاحية */
-  --color-brand-plum: oklch(0.4 0.11 350);
-  --color-brand-teal: oklch(0.7 0.1 190);
+  /* ألوان هوية تحكم */
+  --color-brand-plum: oklch(0.4 0.12 350);
+  --color-brand-teal: oklch(0.7 0.11 190);
 
   --radius: 0.75rem;
 }
