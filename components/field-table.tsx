@@ -2,12 +2,22 @@
 
 import { useState } from "react"
 import { updateSiteStatus } from "@/app/actions/missions"
+import { haversineKm, type LatLng } from "@/lib/geo"
 
 type Site = {
   id: number
   code: string
   storage: string | null
   mapUrl: string | null
+  lat?: number | null
+  lng?: number | null
+}
+
+export type CustomColumn = {
+  key: string
+  label: string
+  type: string
+  options?: string[] | null
 }
 
 export type RowState = {
@@ -15,19 +25,48 @@ export type RowState = {
   storage?: string
   xmlStatus?: string
   faultNote?: string
-  monitorStart?: string // datetime-local
+  monitorStart?: string
   monitorEnd?: string
   photoCount?: number
+  custom?: Record<string, string>
 }
 
 const STATUS_OPTIONS = [
-  { value: "working_clean", label: "يعمل ولا توجد مخالفات", short: "يعمل", dot: "bg-success", ring: "ring-success" },
-  { value: "working_violation", label: "يعمل وتوجد مخالفات", short: "مخالفة", dot: "bg-warning", ring: "ring-warning" },
-  { value: "not_working", label: "لا يعمل", short: "لا يعمل", dot: "bg-destructive", ring: "ring-destructive" },
+  {
+    value: "working_clean",
+    label: "يعمل ولا توجد مخالفات",
+    short: "يعمل",
+    text: "text-success",
+    activeBg: "bg-success text-success-foreground",
+    cardBorder: "border-success/40",
+    cardBg: "bg-success/5",
+    accentBar: "bg-success",
+  },
+  {
+    value: "working_violation",
+    label: "يعمل وتوجد مخالفات",
+    short: "مخالفة",
+    text: "text-warning",
+    activeBg: "bg-warning text-warning-foreground",
+    cardBorder: "border-warning/45",
+    cardBg: "bg-warning/5",
+    accentBar: "bg-warning",
+  },
+  {
+    value: "not_working",
+    label: "لا يعمل",
+    short: "لا يعمل",
+    text: "text-destructive",
+    activeBg: "bg-destructive text-destructive-foreground",
+    cardBorder: "border-destructive/45",
+    cardBg: "bg-destructive/5",
+    accentBar: "bg-destructive",
+  },
 ]
 
 const STORAGE_OPTIONS = ["فلاش", "هاردسك"]
 const XML_OPTIONS = ["يوجد", "لا يوجد"]
+const SITE_RADIUS_KM = 3
 
 function fmtDuration(start?: string, end?: string) {
   if (!start || !end) return "—"
@@ -47,6 +86,8 @@ export function FieldTable({
   rows,
   onRowChange,
   routeName,
+  position,
+  customColumns = [],
 }: {
   sites: Site[]
   missionId: number
@@ -54,6 +95,8 @@ export function FieldTable({
   rows: Record<string, RowState>
   onRowChange: (code: string, patch: Partial<RowState>) => void
   routeName: string
+  position?: LatLng | null
+  customColumns?: CustomColumn[]
 }) {
   const [copied, setCopied] = useState<string | null>(null)
 
@@ -75,83 +118,119 @@ export function FieldTable({
 
   async function handleCamera(site: Site) {
     const r = rows[site.code] || {}
-    const statusLabel = STATUS_OPTIONS.find((s) => s.value === r.status)?.label ?? "غير محدد"
-    // العلامة المائية: اسم الموقع + اسم المسار + نوع العطل
-    const watermark = [site.code, routeName, r.faultNote || statusLabel].filter(Boolean).join(" | ")
+    const statusLabel = STATUS_OPTIONS.find((s) => s.value === r.status)?.label ?? "بدون عطل"
+    const fault = r.faultNote || statusLabel
+    // العلامة المائية المطلوبة: اسم المسار + رقم الموقع + نوع العطل
+    const watermark = `المسار: ${routeName} | الموقع: ${site.code} | العطل: ${fault}`
     try {
       await navigator.clipboard.writeText(watermark)
       setCopied(site.code)
-      setTimeout(() => setCopied((c) => (c === site.code ? null : c)), 1800)
+      setTimeout(() => setCopied((c) => (c === site.code ? null : c)), 2000)
     } catch {}
     persist(site.code, { photoCount: (r.photoCount || 0) + 1 })
-    openTimestampCamera()
+    openTimestampCamera(watermark)
   }
 
   return (
-    <div className="overflow-x-auto rounded-2xl border border-border bg-card">
-      <table className="w-full min-w-[920px] border-collapse text-right text-sm">
-        <thead>
-          <tr className="bg-primary text-primary-foreground">
-            <Th>#</Th>
-            <Th>رمز الموقع</Th>
-            <Th>نوع الوحدة</Th>
-            <Th>الموقع</Th>
-            <Th>XML</Th>
-            <Th>بداية الرصد</Th>
-            <Th>نهاية الرصد</Th>
-            <Th>مدة الرصد</Th>
-            <Th>صور العطل</Th>
-            <Th>ملاحظات</Th>
-            <Th>الحالة</Th>
-          </tr>
-        </thead>
-        <tbody>
-          {sites.map((site, idx) => {
-            const r = rows[site.code] || {}
-            const statusOpt = STATUS_OPTIONS.find((s) => s.value === r.status)
-            return (
-              <tr key={site.id} className="border-b border-border last:border-0 odd:bg-background/40">
-                <Td className="text-center font-bold text-muted-foreground">{idx + 1}</Td>
-                <Td className="whitespace-nowrap font-bold text-foreground">{site.code}</Td>
+    <div className="flex flex-col gap-3">
+      {sites.map((site, idx) => {
+        const r = rows[site.code] || {}
+        const statusOpt = STATUS_OPTIONS.find((s) => s.value === r.status)
+        // المسافة والقفل: تُفتح الخانات فقط ضمن 3 كم من الموقع
+        let distKm: number | null = null
+        if (position && site.lat != null && site.lng != null) {
+          distKm = haversineKm(position, { lat: site.lat, lng: site.lng })
+        }
+        const locked = distKm != null && distKm > SITE_RADIUS_KM
+        const inRange = distKm != null && distKm <= SITE_RADIUS_KM
 
-                {/* نوع الوحدة */}
-                <Td>
+        return (
+          <div
+            key={site.id}
+            className={`relative overflow-hidden rounded-2xl border-2 bg-card transition ${
+              statusOpt ? `${statusOpt.cardBorder} ${statusOpt.cardBg}` : "border-border"
+            }`}
+          >
+            {/* الشريط الجانبي الملوّن حسب الحالة */}
+            <span
+              className={`absolute inset-y-0 right-0 w-1.5 ${statusOpt ? statusOpt.accentBar : "bg-muted"}`}
+              aria-hidden
+            />
+
+            <div className={`flex flex-col gap-3 p-4 pr-5 ${locked ? "opacity-60" : ""}`}>
+              {/* رأس البطاقة: رقم + رمز الموقع + المسافة */}
+              <div className="flex items-center justify-between gap-2">
+                <div className="flex items-center gap-2">
+                  <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-sm font-extrabold text-primary-foreground tahakom-number">
+                    {idx + 1}
+                  </span>
+                  <div>
+                    <p className="text-base font-extrabold text-foreground">{site.code}</p>
+                    {distKm != null && (
+                      <p className={`text-[11px] font-medium ${inRange ? "text-success" : "text-muted-foreground"}`}>
+                        {inRange ? "داخل النطاق" : "خارج النطاق"} · {distKm.toFixed(1)} كم
+                      </p>
+                    )}
+                  </div>
+                </div>
+                {site.mapUrl && (
+                  <a
+                    href={site.mapUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex h-9 items-center gap-1 rounded-lg border border-brand-teal/40 bg-brand-teal/10 px-3 text-xs font-bold text-accent"
+                  >
+                    <PinIcon /> فتح الموقع
+                  </a>
+                )}
+              </div>
+
+              {locked && (
+                <div className="flex items-center gap-1.5 rounded-lg border border-warning/40 bg-warning/10 px-3 py-1.5 text-[11px] font-bold text-warning-foreground">
+                  <LockIcon /> الخانات مقفلة — يجب الاقتراب لمسافة {SITE_RADIUS_KM} كم من الموقع
+                </div>
+              )}
+
+              {/* شريط الحالة المجزّأ الملوّن */}
+              <div className="grid grid-cols-3 gap-1.5 rounded-xl bg-secondary/60 p-1">
+                {STATUS_OPTIONS.map((opt) => (
+                  <button
+                    key={opt.value}
+                    disabled={locked}
+                    onClick={() => persist(site.code, { status: opt.value })}
+                    className={`h-10 rounded-lg text-[12px] font-bold transition active:scale-95 disabled:cursor-not-allowed ${
+                      r.status === opt.value ? opt.activeBg + " shadow" : `bg-card ${opt.text} hover:bg-card/70`
+                    }`}
+                  >
+                    {opt.short}
+                  </button>
+                ))}
+              </div>
+
+              {/* صف الحقول المنسدلة */}
+              <div className="grid grid-cols-2 gap-2.5 md:grid-cols-3">
+                <FieldWrap label="نوع الوحدة">
                   <select
                     aria-label="نوع الوحدة"
+                    disabled={locked}
                     value={r.storage ?? site.storage ?? ""}
                     onChange={(e) => persist(site.code, { storage: e.target.value })}
-                    className="h-9 w-24 rounded-lg border border-input bg-background px-2 text-xs font-medium outline-none focus:border-primary"
+                    className="h-10 w-full rounded-lg border border-input bg-background px-2 text-xs font-bold outline-none focus:border-brand-teal disabled:opacity-50"
                   >
                     <option value="">اختر</option>
                     {STORAGE_OPTIONS.map((o) => (
                       <option key={o} value={o}>{o}</option>
                     ))}
                   </select>
-                </Td>
+                </FieldWrap>
 
-                {/* الموقع / الخريطة */}
-                <Td>
-                  {site.mapUrl ? (
-                    <a
-                      href={site.mapUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex h-9 items-center gap-1 rounded-lg border border-input bg-background px-3 text-xs font-medium text-primary"
-                    >
-                      فتح الموقع
-                    </a>
-                  ) : (
-                    <span className="text-xs text-muted-foreground">—</span>
-                  )}
-                </Td>
-
-                {/* XML منسدلة */}
-                <Td>
+                <FieldWrap label="XML">
                   <select
                     aria-label="حالة XML"
+                    disabled={locked}
                     value={r.xmlStatus ?? ""}
                     onChange={(e) => persist(site.code, { xmlStatus: e.target.value })}
-                    className={`h-9 w-20 rounded-lg border border-input bg-background px-2 text-xs font-bold outline-none focus:border-primary ${
+                    className={`h-10 w-full rounded-lg border border-input bg-background px-2 text-xs font-bold outline-none focus:border-brand-teal disabled:opacity-50 ${
                       r.xmlStatus === "يوجد" ? "text-success" : r.xmlStatus === "لا يوجد" ? "text-destructive" : ""
                     }`}
                   >
@@ -160,96 +239,140 @@ export function FieldTable({
                       <option key={o} value={o}>{o}</option>
                     ))}
                   </select>
-                </Td>
+                </FieldWrap>
 
-                {/* بداية الرصد */}
-                <Td>
+                <FieldWrap label="مدة الرصد">
+                  <div className="flex h-10 items-center justify-center rounded-lg border border-input bg-background text-xs font-extrabold text-foreground tahakom-number">
+                    {fmtDuration(r.monitorStart, r.monitorEnd)}
+                  </div>
+                </FieldWrap>
+
+                {/* الأعمدة المخصّصة من لوحة الإدارة */}
+                {customColumns.map((col) => (
+                  <FieldWrap key={col.key} label={col.label}>
+                    {col.type === "dropdown" ? (
+                      <select
+                        aria-label={col.label}
+                        disabled={locked}
+                        value={r.custom?.[col.key] ?? ""}
+                        onChange={(e) =>
+                          persist(site.code, { custom: { ...(r.custom || {}), [col.key]: e.target.value } })
+                        }
+                        className="h-10 w-full rounded-lg border border-input bg-background px-2 text-xs font-bold outline-none focus:border-brand-teal disabled:opacity-50"
+                      >
+                        <option value="">اختر</option>
+                        {(col.options || []).map((o) => (
+                          <option key={o} value={o}>{o}</option>
+                        ))}
+                      </select>
+                    ) : (
+                      <input
+                        aria-label={col.label}
+                        disabled={locked}
+                        value={r.custom?.[col.key] ?? ""}
+                        onChange={(e) =>
+                          persist(site.code, { custom: { ...(r.custom || {}), [col.key]: e.target.value } })
+                        }
+                        className="h-10 w-full rounded-lg border border-input bg-background px-2 text-xs outline-none focus:border-brand-teal disabled:opacity-50"
+                      />
+                    )}
+                  </FieldWrap>
+                ))}
+              </div>
+
+              {/* بداية/نهاية المجلد */}
+              <div className="grid grid-cols-2 gap-2.5">
+                <FieldWrap label="بداية المجلد (تاريخ ووقت)">
                   <input
                     type="datetime-local"
                     aria-label="بداية المجلد"
+                    disabled={locked}
                     value={r.monitorStart ?? ""}
                     onChange={(e) => persist(site.code, { monitorStart: e.target.value })}
-                    className="h-9 w-40 rounded-lg border border-input bg-background px-2 text-xs outline-none focus:border-primary"
+                    className="h-10 w-full rounded-lg border border-input bg-background px-2 text-xs outline-none focus:border-brand-teal disabled:opacity-50"
                   />
-                </Td>
-
-                {/* نهاية الرصد */}
-                <Td>
+                </FieldWrap>
+                <FieldWrap label="نهاية المجلد (تاريخ ووقت)">
                   <input
                     type="datetime-local"
                     aria-label="نهاية المجلد"
+                    disabled={locked}
                     value={r.monitorEnd ?? ""}
                     onChange={(e) => persist(site.code, { monitorEnd: e.target.value })}
-                    className="h-9 w-40 rounded-lg border border-input bg-background px-2 text-xs outline-none focus:border-primary"
+                    className="h-10 w-full rounded-lg border border-input bg-background px-2 text-xs outline-none focus:border-brand-teal disabled:opacity-50"
                   />
-                </Td>
+                </FieldWrap>
+              </div>
 
-                {/* مدة الرصد */}
-                <Td className="whitespace-nowrap text-center text-xs font-bold text-foreground">
-                  {fmtDuration(r.monitorStart, r.monitorEnd)}
-                </Td>
-
-                {/* صور العطل + زر التصوير */}
-                <Td>
-                  <button
-                    onClick={() => handleCamera(site)}
-                    className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-primary/40 bg-primary/10 px-3 text-xs font-bold text-primary transition active:scale-95"
-                  >
-                    {copied === site.code ? "تم النسخ" : `صورة ${r.photoCount || 0}`}
-                  </button>
-                </Td>
-
-                {/* ملاحظات / نوع العطل */}
-                <Td>
+              {/* ملاحظة العطل + زر التصوير */}
+              <div className="flex items-end gap-2.5">
+                <FieldWrap label="نوع العطل / ملاحظة" className="flex-1">
                   <input
+                    disabled={locked}
                     value={r.faultNote ?? ""}
                     onChange={(e) => persist(site.code, { faultNote: e.target.value })}
-                    placeholder="نوع العطل / ملاحظة"
-                    className="h-9 w-36 rounded-lg border border-input bg-background px-2 text-xs outline-none focus:border-primary"
+                    placeholder="اكتب نوع العطل"
+                    className="h-10 w-full rounded-lg border border-input bg-background px-2 text-xs outline-none focus:border-brand-teal disabled:opacity-50"
                   />
-                </Td>
-
-                {/* حالة الإنجاز */}
-                <Td>
-                  <div className="flex flex-col gap-1">
-                    {STATUS_OPTIONS.map((opt) => (
-                      <button
-                        key={opt.value}
-                        onClick={() => persist(site.code, { status: opt.value })}
-                        className={`flex h-7 items-center gap-1.5 rounded-md border px-2 text-[11px] font-bold transition ${
-                          r.status === opt.value
-                            ? "border-foreground/20 bg-secondary"
-                            : "border-transparent text-muted-foreground hover:bg-secondary/50"
-                        }`}
-                      >
-                        <span className={`h-2.5 w-2.5 rounded-full ${opt.dot}`} />
-                        {opt.short}
-                      </button>
-                    ))}
-                  </div>
-                </Td>
-              </tr>
-            )
-          })}
-        </tbody>
-      </table>
+                </FieldWrap>
+                <button
+                  onClick={() => handleCamera(site)}
+                  disabled={locked}
+                  className="tahakom-gradient flex h-10 shrink-0 items-center gap-1.5 rounded-lg px-3 text-xs font-bold text-white transition active:scale-95 disabled:opacity-50"
+                >
+                  <CameraIcon />
+                  {copied === site.code ? "تم النسخ" : `تصوير ${r.photoCount || 0}`}
+                </button>
+              </div>
+            </div>
+          </div>
+        )
+      })}
     </div>
   )
 }
 
-function Th({ children }: { children: React.ReactNode }) {
-  return <th className="whitespace-nowrap px-3 py-3 text-center text-xs font-bold">{children}</th>
-}
-function Td({ children, className = "" }: { children: React.ReactNode; className?: string }) {
-  return <td className={`px-3 py-2.5 align-middle ${className}`}>{children}</td>
+function FieldWrap({ label, children, className = "" }: { label: string; children: React.ReactNode; className?: string }) {
+  return (
+    <div className={className}>
+      <p className="mb-1 text-[11px] font-medium text-muted-foreground">{label}</p>
+      {children}
+    </div>
+  )
 }
 
-function openTimestampCamera() {
+function openTimestampCamera(watermark: string) {
   const ua = navigator.userAgent || ""
   if (/android/i.test(ua)) {
+    // فتح تطبيق Timestamp Camera (إن كان مثبتًا) لالتقاط صورة بعلامة مائية
     window.location.href =
       "intent://#Intent;package=com.jeyluta.timestampcamerafree;action=android.media.action.IMAGE_CAPTURE;end"
   } else {
-    alert("تم نسخ بيانات العلامة المائية (الموقع | المسار | العطل). افتح تطبيق Timestamp Camera والصقها.")
+    alert(`تم نسخ بيانات العلامة المائية:\n${watermark}\n\nافتح تطبيق Timestamp Camera والصقها فوق الصورة.`)
   }
+}
+
+function PinIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0Z" />
+      <circle cx="12" cy="10" r="3" />
+    </svg>
+  )
+}
+function CameraIcon() {
+  return (
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+      <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3Z" />
+      <circle cx="12" cy="13" r="3" />
+    </svg>
+  )
+}
+function LockIcon() {
+  return (
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+      <rect x="3" y="11" width="18" height="11" rx="2" />
+      <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+    </svg>
+  )
 }

@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { lookupEmployee, saveEmployee } from "@/app/actions/employees"
+import { TahakomLogo } from "./tahakom-logo"
 
 export function IdStep({ onNext }: { onNext: (employeeId: string, name: string) => void }) {
   const [employeeId, setEmployeeId] = useState("")
@@ -39,15 +40,24 @@ export function IdStep({ onNext }: { onNext: (employeeId: string, name: string) 
   }
 
   return (
-    <div className="mx-auto flex min-h-dvh w-full max-w-md flex-col items-center justify-center gap-6 p-6">
-      <div className="flex flex-col items-center gap-2 text-center">
-        <h1 className="text-2xl font-extrabold text-primary">تسجيل الدخول</h1>
+    <div className="relative mx-auto flex min-h-dvh w-full max-w-md flex-col items-center justify-center gap-6 overflow-hidden p-6">
+      {/* توهج خلفي فخم بألوان الهوية */}
+      <div className="pointer-events-none absolute inset-0">
+        <div className="absolute -top-10 right-0 h-64 w-64 rounded-full bg-brand-plum/15 blur-3xl" />
+        <div className="absolute bottom-0 left-0 h-64 w-64 rounded-full bg-brand-teal/15 blur-3xl" />
+      </div>
+
+      <div className="relative z-10 flex flex-col items-center gap-3 text-center">
+        <div className="animate-brand-glow">
+          <TahakomLogo size={120} showText={false} />
+        </div>
+        <h1 className="text-2xl font-extrabold tahakom-gradient-text">تسجيل الدخول</h1>
         <p className="text-sm text-muted-foreground">أدخل رقمك الوظيفي للمتابعة</p>
       </div>
 
       <form
         onSubmit={submit}
-        className="w-full animate-fade-up rounded-2xl border border-border bg-card p-6 shadow-xl shadow-black/10"
+        className="relative z-10 w-full animate-fade-up rounded-2xl border border-brand-plum/15 bg-card p-6 shadow-xl shadow-brand-plum/10"
       >
         <div className="flex flex-col gap-4">
           <div>
@@ -66,7 +76,7 @@ export function IdStep({ onNext }: { onNext: (employeeId: string, name: string) 
               }}
               onBlur={checkId}
               placeholder="أدخل رقمك الوظيفي"
-              className="h-14 w-full rounded-xl border border-input bg-background px-4 text-center text-xl font-bold text-foreground outline-none ring-primary/40 transition focus:border-primary focus:ring-2"
+              className="tahakom-number h-16 w-full rounded-xl border-2 border-brand-plum/25 bg-background px-4 text-center text-3xl font-extrabold tracking-widest text-primary outline-none ring-brand-teal/40 transition focus:border-brand-teal focus:ring-2"
               autoFocus
             />
           </div>
@@ -97,9 +107,10 @@ export function IdStep({ onNext }: { onNext: (employeeId: string, name: string) 
           <button
             type="submit"
             disabled={loading || !checked}
-            className="h-14 w-full rounded-xl bg-primary text-lg font-bold text-primary-foreground transition active:scale-[0.98] disabled:opacity-50"
+            className="tahakom-gradient relative h-14 w-full overflow-hidden rounded-xl text-lg font-bold text-white shadow-lg shadow-brand-plum/25 transition active:scale-[0.98] disabled:opacity-50"
           >
-            {loading ? "جارٍ التحقق..." : "متابعة"}
+            <span className="relative z-10">{loading ? "جارٍ التحقق..." : "متابعة"}</span>
+            {checked && <span className="absolute inset-y-0 left-0 z-0 w-1/3 animate-shine bg-white/25 blur-md" />}
           </button>
         </div>
       </form>

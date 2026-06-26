@@ -6,6 +6,7 @@ import {
   doublePrecision,
   timestamp,
   boolean,
+  jsonb,
 } from "drizzle-orm/pg-core"
 
 // الموظفون: الرقم الوظيفي يجلب الاسم تلقائيًا في المرات القادمة
@@ -13,6 +14,31 @@ export const employees = pgTable("employees", {
   id: serial("id").primaryKey(),
   employeeId: text("employeeId").notNull().unique(),
   name: text("name").notNull(),
+  role: text("role").notNull().default("field"), // field | supervisor | manager
+  createdAt: timestamp("createdAt").notNull().defaultNow(),
+})
+
+// إعدادات النظام: موقع الإدارة ونطاقات السماح
+export const appSettings = pgTable("app_settings", {
+  id: integer("id").primaryKey().default(1),
+  hqLat: doublePrecision("hqLat"),
+  hqLng: doublePrecision("hqLng"),
+  hqRadiusKm: doublePrecision("hqRadiusKm").notNull().default(2),
+  siteRadiusKm: doublePrecision("siteRadiusKm").notNull().default(3),
+  updatedAt: timestamp("updatedAt").notNull().defaultNow(),
+})
+
+// إعدادات الأعمدة القابلة للتخصيص (إعادة تسمية + خيارات منسدلة)
+// planNumber = null تعني عمودًا افتراضيًا لكل المسارات
+export const columnConfigs = pgTable("column_configs", {
+  id: serial("id").primaryKey(),
+  planNumber: integer("planNumber"),
+  key: text("key").notNull(),
+  label: text("label").notNull(),
+  type: text("type").notNull().default("dropdown"), // dropdown | text
+  options: jsonb("options").$type<string[]>(),
+  orderIndex: integer("orderIndex").notNull().default(0),
+  enabled: boolean("enabled").notNull().default(true),
   createdAt: timestamp("createdAt").notNull().defaultNow(),
 })
 
