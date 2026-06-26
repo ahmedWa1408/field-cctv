@@ -3,7 +3,16 @@
 import { useState } from "react"
 import Link from "next/link"
 import { getPlan } from "@/app/actions/plans"
-import { addSite, reorderSitesSmart, deleteSite, updateSiteCoords } from "@/app/actions/admin"
+import {
+  addSite,
+  reorderSitesSmart,
+  deleteSite,
+  updateSiteCoords,
+  moveSite,
+  renameSite,
+  renamePlan,
+  deletePlan,
+} from "@/app/actions/admin"
 
 type Plan = { planNumber: number; route: string; speedLimit: number | null }
 type Site = {
@@ -24,6 +33,11 @@ export function AdminPlanCard({ plan }: { plan: Plan }) {
   const [storage, setStorage] = useState("")
   const [mapUrl, setMapUrl] = useState("")
   const [busy, setBusy] = useState(false)
+
+  const [editingName, setEditingName] = useState(false)
+  const [routeName, setRouteName] = useState(plan.route)
+  const [editingSite, setEditingSite] = useState<number | null>(null)
+  const [editCode, setEditCode] = useState("")
 
   async function load() {
     setLoading(true)
@@ -72,27 +86,91 @@ export function AdminPlanCard({ plan }: { plan: Plan }) {
     setBusy(false)
   }
 
+  async function move(id: number, direction: "up" | "down") {
+    setBusy(true)
+    await moveSite(plan.planNumber, id, direction)
+    await load()
+    setBusy(false)
+  }
+
+  async function saveSiteName(id: number) {
+    if (!editCode.trim()) return
+    setBusy(true)
+    await renameSite(id, editCode)
+    setEditingSite(null)
+    await load()
+    setBusy(false)
+  }
+
+  async function savePlanName() {
+    if (!routeName.trim()) return
+    setBusy(true)
+    await renamePlan(plan.planNumber, routeName)
+    setEditingName(false)
+    setBusy(false)
+  }
+
+  async function removePlan() {
+    if (!confirm(`حذف "${plan.route}" بالكامل مع كل مواقعه؟`)) return
+    setBusy(true)
+    await deletePlan(plan.planNumber)
+    setBusy(false)
+  }
+
   return (
     <div className="rounded-2xl border border-border bg-card">
-      <button
-        onClick={toggle}
-        className="flex w-full items-center justify-between gap-2 p-4 text-right"
-      >
-        <div className="min-w-0">
+      <div className="flex w-full items-center justify-between gap-2 p-4">
+        <button onClick={toggle} className="min-w-0 flex-1 text-right">
           <p className="truncate text-base font-bold text-foreground">{plan.route}</p>
           <p className="text-xs text-muted-foreground">خطة رقم {plan.planNumber}</p>
-        </div>
+        </button>
         <div className="flex shrink-0 items-center gap-2">
+          <button
+            onClick={() => {
+              setRouteName(plan.route)
+              setEditingName((v) => !v)
+            }}
+            className="rounded-lg border border-border bg-secondary px-3 py-1.5 text-xs font-bold text-secondary-foreground"
+          >
+            تسمية
+          </button>
           <Link
             href={`/reports/${plan.planNumber}`}
-            onClick={(e) => e.stopPropagation()}
             className="rounded-lg border border-accent/40 bg-accent/10 px-3 py-1.5 text-xs font-bold text-accent"
           >
             التقارير
           </Link>
-          <span className="text-muted-foreground">{open ? "▲" : "▼"}</span>
+          <button onClick={toggle} className="px-1 text-muted-foreground" aria-label="فتح">
+            {open ? "▲" : "▼"}
+          </button>
         </div>
-      </button>
+      </div>
+
+      {editingName && (
+        <div className="flex flex-col gap-2 border-t border-border p-4 sm:flex-row">
+          <input
+            value={routeName}
+            onChange={(e) => setRouteName(e.target.value)}
+            className="h-11 flex-1 rounded-lg border border-input bg-background px-3 text-sm outline-none focus:border-primary"
+          />
+          <div className="flex gap-2">
+            <button
+              onClick={savePlanName}
+              disabled={busy}
+              className="h-11 rounded-lg bg-primary px-4 text-sm font-bold text-primary-foreground disabled:opacity-60"
+            >
+              حفظ الاسم
+            </button>
+            <button
+              onClick={removePlan}
+              disabled={busy}
+              className="h-11 rounded-lg border border-destructive/40 bg-destructive/10 px-4 text-sm font-bold text-destructive disabled:opacity-60"
+            >
+              حذف المسار
+            </button>
+          </div>
+        </div>
+      )}
 
       {open && (
         <div className="border-t border-border p-4">
@@ -109,7 +187,7 @@ export function AdminPlanCard({ plan }: { plan: Plan }) {
               <input
                 value={storage}
                 onChange={(e) => setStorage(e.target.value)}
-                placeholder="التخزين"
+                placeholder="التخزين (اختياري)"
                 className="h-11 flex-1 rounded-lg border border-input bg-card px-3 text-sm outline-none focus:border-primary"
               />
             </div>
@@ -150,27 +228,86 @@ export function AdminPlanCard({ plan }: { plan: Plan }) {
                   <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary/15 text-xs font-bold text-primary">
                     {i + 1}
                   </span>
-                  <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm font-bold text-foreground">{s.code}</p>
-                    <p className="text-[11px] text-muted-foreground">
-                      {s.lat != null ? "إحداثيات ✓" : "بدون إحداثيات"}
-                      {s.storage ? ` · ${s.storage}` : ""}
-                    </p>
-                  </div>
-                  {s.mapUrl && s.lat == null && (
+
+                  {/* أزرار التحريك */}
+                  <div className="flex shrink-0 flex-col">
                     <button
-                      onClick={() => fixCoords(s)}
-                      className="rounded-md border border-warning/40 bg-warning/10 px-2 py-1 text-[11px] font-bold text-warning"
+                      onClick={() => move(s.id, "up")}
+                      disabled={busy || i === 0}
+                      className="px-1 text-xs leading-none text-muted-foreground disabled:opacity-30"
+                      aria-label="تحريك لأعلى"
                     >
-                      استخراج الموقع
+                      ▲
                     </button>
+                    <button
+                      onClick={() => move(s.id, "down")}
+                      disabled={busy || i === sites.length - 1}
+                      className="px-1 text-xs leading-none text-muted-foreground disabled:opacity-30"
+                      aria-label="تحريك لأسفل"
+                    >
+                      ▼
+                    </button>
+                  </div>
+
+                  <div className="min-w-0 flex-1">
+                    {editingSite === s.id ? (
+                      <div className="flex items-center gap-1.5">
+                        <input
+                          value={editCode}
+                          onChange={(e) => setEditCode(e.target.value)}
+                          className="h-9 min-w-0 flex-1 rounded-md border border-input bg-card px-2 text-sm outline-none focus:border-primary"
+                        />
+                        <button
+                          onClick={() => saveSiteName(s.id)}
+                          className="rounded-md bg-primary px-2 py-1 text-[11px] font-bold text-primary-foreground"
+                        >
+                          حفظ
+                        </button>
+                        <button
+                          onClick={() => setEditingSite(null)}
+                          className="rounded-md border border-border px-2 py-1 text-[11px] text-muted-foreground"
+                        >
+                          إلغاء
+                        </button>
+                      </div>
+                    ) : (
+                      <>
+                        <p className="truncate text-sm font-bold text-foreground">{s.code}</p>
+                        <p className="text-[11px] text-muted-foreground">
+                          {s.lat != null ? "إحداثيات ✓" : "بدون إحداثيات"}
+                          {s.storage ? ` · ${s.storage}` : ""}
+                        </p>
+                      </>
+                    )}
+                  </div>
+
+                  {editingSite !== s.id && (
+                    <>
+                      <button
+                        onClick={() => {
+                          setEditingSite(s.id)
+                          setEditCode(s.code)
+                        }}
+                        className="rounded-md border border-border bg-secondary px-2 py-1 text-[11px] font-bold text-secondary-foreground"
+                      >
+                        تعديل
+                      </button>
+                      {s.mapUrl && s.lat == null && (
+                        <button
+                          onClick={() => fixCoords(s)}
+                          className="rounded-md border border-warning/40 bg-warning/10 px-2 py-1 text-[11px] font-bold text-warning"
+                        >
+                          استخراج
+                        </button>
+                      )}
+                      <button
+                        onClick={() => remove(s.id)}
+                        className="rounded-md border border-destructive/40 bg-destructive/10 px-2 py-1 text-[11px] font-bold text-destructive"
+                      >
+                        حذف
+                      </button>
+                    </>
                   )}
-                  <button
-                    onClick={() => remove(s.id)}
-                    className="rounded-md border border-destructive/40 bg-destructive/10 px-2 py-1 text-[11px] font-bold text-destructive"
-                  >
-                    حذف
-                  </button>
                 </li>
               ))}
             </ul>

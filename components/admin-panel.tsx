@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { verifyAdmin, addPlan } from "@/app/actions/admin"
+import { verifyAdmin, addPlan, addPlanFromPaste } from "@/app/actions/admin"
 import { AdminPlanCard } from "./admin-plan-card"
 
 type Plan = {
@@ -19,9 +19,36 @@ export function AdminPanel({ initialPlans }: { initialPlans: Plan[] }) {
   const [plans, setPlans] = useState<Plan[]>(initialPlans)
 
   // نموذج إضافة خطة
+  const [mode, setMode] = useState<"copy" | "paste">("copy")
   const [newRoute, setNewRoute] = useState("")
   const [copyFrom, setCopyFrom] = useState("")
   const [adding, setAdding] = useState(false)
+
+  // لصق مسار كامل
+  const [pasteRoute, setPasteRoute] = useState("")
+  const [pasteText, setPasteText] = useState("")
+  const [pasteMsg, setPasteMsg] = useState("")
+
+  async function createFromPaste(e: React.FormEvent) {
+    e.preventDefault()
+    if (!pasteRoute.trim() || !pasteText.trim()) return
+    setAdding(true)
+    setPasteMsg("")
+    const res = await addPlanFromPaste({ route: pasteRoute, text: pasteText })
+    setAdding(false)
+    if (res.ok && res.planNumber) {
+      setPlans((p) =>
+        [...p, { id: Date.now(), planNumber: res.planNumber!, route: pasteRoute.trim(), speedLimit: 120 }].sort(
+          (a, b) => a.planNumber - b.planNumber,
+        ),
+      )
+      setPasteMsg(`تمت إضافة المسار رقم ${res.planNumber} بـ${res.count} موقع وترتيبها ذكيًا.`)
+      setPasteRoute("")
+      setPasteText("")
+    } else {
+      setPasteMsg(res.error || "تعذّرت الإضافة")
+    }
+  }
 
   async function login(e: React.FormEvent) {
     e.preventDefault()
@@ -94,7 +121,54 @@ export function AdminPanel({ initialPlans }: { initialPlans: Plan[] }) {
       </header>
 
       {/* إضافة خطة جديدة */}
-      <form onSubmit={createPlan} className="mb-6 rounded-2xl border border-border bg-card p-4">
+      <div className="mb-6 rounded-2xl border border-border bg-card p-4">
+        <div className="mb-4 flex gap-2">
+          <button
+            onClick={() => setMode("copy")}
+            className={`flex-1 rounded-lg px-3 py-2 text-xs font-bold ${
+              mode === "copy" ? "bg-primary text-primary-foreground" : "bg-secondary text-secondary-foreground"
+            }`}
+          >
+            خطة جديدة / نسخ
+          </button>
+          <button
+            onClick={() => setMode("paste")}
+            className={`flex-1 rounded-lg px-3 py-2 text-xs font-bold ${
+              mode === "paste" ? "bg-primary text-primary-foreground" : "bg-secondary text-secondary-foreground"
+            }`}
+          >
+            لصق مسار كامل
+          </button>
+        </div>
+
+        {mode === "paste" ? (
+          <form onSubmit={createFromPaste} className="flex flex-col gap-3">
+            <input
+              value={pasteRoute}
+              onChange={(e) => setPasteRoute(e.target.value)}
+              placeholder="اسم المسار الجديد"
+              className="h-12 w-full rounded-xl border border-input bg-background px-4 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/50"
+            />
+            <textarea
+              value={pasteText}
+              onChange={(e) => setPasteText(e.target.value)}
+              placeholder={"الصق المواقع هنا: كل موقع برمزه ورابط خريطته في السطر التالي...\nمثال:\nQSMSM204\nhttps://maps.app.goo.gl/..."}
+              rows={6}
+              className="w-full rounded-xl border border-input bg-background p-4 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/50"
+            />
+            <button
+              disabled={adding}
+              className="h-12 rounded-xl bg-primary px-6 text-sm font-bold text-primary-foreground active:scale-95 disabled:opacity-60"
+            >
+              {adding ? "جارٍ التحليل والترتيب..." : "إنشاء المسار من النص"}
+            </button>
+            {pasteMsg && <p className="text-xs font-medium text-accent">{pasteMsg}</p>}
+            <p className="text-xs text-muted-foreground">
+              يستخرج النظام الرموز والروابط تلقائيًا، يحوّل الروابط لإحداثيات، ويرتّب المواقع ترتيبًا ذكيًا من البداية للنهاية.
+            </p>
+          </form>
+        ) : (
+          <form onSubmit={createPlan}>
         <h2 className="mb-3 text-sm font-bold text-foreground">إضافة خطة جديدة</h2>
         <div className="flex flex-col gap-3 sm:flex-row">
           <input
@@ -125,7 +199,9 @@ export function AdminPanel({ initialPlans }: { initialPlans: Plan[] }) {
         <p className="mt-2 text-xs text-muted-foreground">
           تُضاف الخطة برقم تلقائي وتُرتّب تلقائيًا. يمكنك نسخ مواقع خطة موجودة.
         </p>
-      </form>
+          </form>
+        )}
+      </div>
 
       {/* قائمة الخطط */}
       <div className="flex flex-col gap-4">
